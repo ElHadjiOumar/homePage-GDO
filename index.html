@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WeData Navigator</title>
+<style>
+  :root {
+    --green-800: #174f33;
+    --green-700: #236a45;
+    --green-600: #2e7d4f;
+    --green-100: #e8f5ee;
+    --green-050: #f3faf6;
+    --grey-900: #172033;
+    --grey-700: #3f4a5a;
+    --grey-600: #586475;
+    --grey-500: #718096;
+    --grey-300: #cfd6df;
+    --grey-200: #e4e8ee;
+    --grey-100: #f1f3f6;
+    --grey-050: #f7f8fa;
+    --white: #ffffff;
+    --red-700: #b42318;
+    --red-100: #fee4e2;
+    --border: #dfe5ec;
+    --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.08);
+    --shadow-md: 0 10px 24px rgba(16, 24, 40, 0.10);
+    --radius: 8px;
+    --font: "Segoe UI", Arial, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--grey-050);
+    color: var(--grey-900);
+    font-family: var(--font);
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: 72px;
+    padding: 10px 32px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .brand-link {
+    display: inline-flex;
+    align-items: center;
+    min-width: 150px;
+  }
+
+  .brand-logo {
+    display: block;
+    max-width: 154px;
+    max-height: 54px;
+    object-fit: contain;
+  }
+
+  .fallback-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--green-800);
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  .fallback-mark {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    background: var(--green-700);
+    color: var(--white);
+    font-weight: 900;
+  }
+
+  .search-form {
+    display: flex;
+    align-items: center;
+    width: min(520px, 100%);
+    margin-left: auto;
+    border: 1px solid var(--green-600);
+    border-radius: 999px;
+    background: var(--grey-050);
+    overflow: hidden;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    padding: 10px 12px 10px 18px;
+    color: var(--grey-700);
+    background: transparent;
+  }
+
+  .search-button {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin: 4px;
+    border: 0;
+    border-radius: 999px;
+    color: var(--white);
+    background: var(--green-600);
+    cursor: pointer;
+  }
+
+  .search-button:hover {
+    background: var(--green-800);
+  }
+
+  .page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 34px 24px 42px;
+  }
+
+  .navigator-shell {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+
+  .navigator-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 26px 30px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--white), var(--grey-050));
+  }
+
+  .eyebrow {
+    margin: 0 0 6px;
+    color: var(--green-700);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+    line-height: 1.15;
+    letter-spacing: 0;
+  }
+
+  .subtitle {
+    max-width: 760px;
+    margin: 10px 0 0;
+    color: var(--grey-600);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 310px;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--grey-500);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .step-number {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--grey-300);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--grey-600);
+  }
+
+  .step.is-active {
+    color: var(--green-800);
+  }
+
+  .step.is-active .step-number {
+    border-color: var(--green-600);
+    background: var(--green-600);
+    color: var(--white);
+  }
+
+  .step.is-complete {
+    color: var(--green-700);
+  }
+
+  .step.is-complete .step-number {
+    border-color: var(--green-600);
+    background: var(--green-100);
+    color: var(--green-800);
+  }
+
+  .step-line {
+    flex: 1;
+    height: 2px;
+    min-width: 42px;
+    background: var(--grey-200);
+  }
+
+  .step-line.is-complete {
+    background: var(--green-600);
+  }
+
+  .panel {
+    padding: 28px 30px 30px;
+  }
+
+  .panel-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+  }
+
+  .panel-title {
+    margin: 0;
+    font-size: 1.18rem;
+    line-height: 1.25;
+  }
+
+  .panel-help {
+    margin: 7px 0 0;
+    color: var(--grey-600);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .selection-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 6px 12px;
+    border: 1px solid var(--green-600);
+    border-radius: 999px;
+    background: var(--green-050);
+    color: var(--green-800);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .entity-groups {
+    display: grid;
+    gap: 18px;
+  }
+
+  .group-block {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--white);
+  }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--grey-050);
+  }
+
+  .group-title {
+    margin: 0;
+    color: var(--grey-700);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .group-title.is-green {
+    color: var(--green-800);
+  }
+
+  .group-count {
+    color: var(--grey-500);
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .domain-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    padding: 0;
+  }
+
+  .choice-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 58px;
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    color: var(--white);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease, background 0.16s ease;
+  }
+
+  .choice-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(16, 24, 40, 0.12);
+  }
+
+  .choice-card:focus-visible {
+    outline: 3px solid rgba(46, 125, 79, 0.25);
+    outline-offset: 2px;
+  }
+
+  .choice-card.is-risk {
+    background: var(--grey-600);
+  }
+
+  .choice-card.is-risk:hover,
+  .choice-card.is-risk.is-selected {
+    background: var(--grey-700);
+  }
+
+  .choice-card.is-business {
+    background: var(--green-600);
+  }
+
+  .choice-card.is-business:hover,
+  .choice-card.is-business.is-selected {
+    background: var(--green-800);
+  }
+
+  .choice-card.is-domain {
+    min-height: 66px;
+    border-color: var(--border);
+    background: var(--white);
+    color: var(--grey-900);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .choice-card.is-domain:hover {
+    border-color: var(--green-600);
+    background: var(--green-050);
+  }
+
+  .choice-card.is-selected {
+    border-color: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 3px rgba(46, 125, 79, 0.20), 0 8px 18px rgba(16, 24, 40, 0.12);
+  }
+
+  .choice-card.is-domain.is-selected {
+    border-color: var(--green-600);
+    background: var(--green-100);
+    color: var(--green-800);
+  }
+
+  .card-text {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .card-label {
+    font-size: 0.84rem;
+    font-weight: 850;
+    letter-spacing: 0.02em;
+    line-height: 1.22;
+  }
+
+  .card-badge {
+    width: fit-content;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+    color: inherit;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .choice-card.is-domain .card-badge {
+    background: var(--green-100);
+    color: var(--green-800);
+  }
+
+  .checkmark {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+    color: transparent;
+  }
+
+  .choice-card.is-domain .checkmark {
+    border-color: var(--grey-300);
+  }
+
+  .choice-card.is-selected .checkmark {
+    border-color: currentColor;
+    color: currentColor;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .context-box {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 15px 16px;
+    border: 1px solid #b8ddc8;
+    border-radius: var(--radius);
+    background: var(--green-050);
+  }
+
+  .context-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: var(--green-600);
+    color: var(--white);
+  }
+
+  .context-label {
+    margin: 0 0 3px;
+    color: var(--grey-500);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .context-value {
+    margin: 0;
+    color: var(--green-800);
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .feedback {
+    min-height: 22px;
+    margin-top: 16px;
+    color: var(--red-700);
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+
+  .feedback[hidden] {
+    display: block;
+    visibility: hidden;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+  }
+
+  .btn-primary {
+    background: var(--green-600);
+    color: var(--white);
+    box-shadow: 0 6px 14px rgba(46, 125, 79, 0.24);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--green-800);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    border-color: var(--grey-300);
+    background: var(--white);
+    color: var(--grey-700);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--grey-600);
+    background: var(--grey-100);
+  }
+
+  .btn:disabled {
+    border-color: var(--grey-200);
+    background: var(--grey-100);
+    color: var(--grey-500);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  @media (max-width: 780px) {
+    .topbar {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px 18px;
+    }
+
+    .search-form {
+      margin-left: 0;
+    }
+
+    .page {
+      padding: 18px 12px 28px;
+    }
+
+    .navigator-header {
+      grid-template-columns: 1fr;
+      padding: 22px 18px;
+    }
+
+    .stepper {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .step {
+      font-size: 0.68rem;
+    }
+
+    .panel {
+      padding: 22px 18px 24px;
+    }
+
+    .panel-top,
+    .actions,
+    .context-box {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .panel-top {
+      display: grid;
+    }
+
+    .selection-pill {
+      width: fit-content;
+      white-space: normal;
+    }
+
+    .context-box {
+      grid-template-columns: auto 1fr;
+    }
+
+    .context-box .btn {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand-link" href="#" data-action="reset" aria-label="Back to WeData Navigator start">
+    <img class="brand-logo" src="wedata-new-logo.png" alt="WeData" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+    <span class="fallback-logo hidden"><span class="fallback-mark">W</span> WeData</span>
+  </a>
+
+  <form class="search-form" id="searchForm" role="search">
+    <input class="search-input" id="searchInput" type="search" placeholder="What data are you looking for?" aria-label="Search WeData" />
+    <button class="search-button" type="submit" aria-label="Search">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M9.8 4a5.8 5.8 0 0 1 4.6 9.33l4.64 4.63-1.41 1.42-4.64-4.64A5.8 5.8 0 1 1 9.8 4Zm0 2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/>
+      </svg>
+    </button>
+  </form>
+</header>
+
+<main class="page">
+  <section class="navigator-shell" aria-labelledby="navigatorTitle">
+    <div class="navigator-header">
+      <div>
+        <p class="eyebrow">Internal navigation</p>
+        <h1 id="navigatorTitle">WeData Navigator</h1>
+        <p class="subtitle">Select an entity, then choose the Group Data Domain you want to access.</p>
+      </div>
+
+      <div class="stepper" aria-label="Navigation progress">
+        <div class="step is-active" id="stepIndicatorEntity">
+          <span class="step-number">1</span>
+          <span>Entity</span>
+        </div>
+        <div class="step-line" id="stepConnector"></div>
+        <div class="step" id="stepIndicatorDomain">
+          <span class="step-number">2</span>
+          <span>Group Data Domain</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="panel" id="entityStep" aria-labelledby="entityTitle">
+      <div class="panel-top">
+        <div>
+          <h2 class="panel-title" id="entityTitle">Choose an entity</h2>
+          <p class="panel-help">Risk Finance Filieres and Business Lines are grouped to keep the selection easy to scan.</p>
+        </div>
+        <span class="selection-pill hidden" id="entitySelectionPill"></span>
+      </div>
+
+      <div class="entity-groups" id="entityGroups"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="nextButton" type="button" disabled>
+          Continue
+          <span aria-hidden="true">></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="domainStep" aria-labelledby="domainTitle">
+      <div class="panel-top">
+        <div>
+          <h2 class="panel-title" id="domainTitle">Choose a Group Data Domain</h2>
+          <p class="panel-help">The selected combination will open the matching WeData destination.</p>
+        </div>
+      </div>
+
+      <div class="context-box">
+        <div class="context-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 3 3 8l9 5 9-5-9-5Zm-5 8.1-4 2.22 9 5 9-5-4-2.22-5 2.78-5-2.78Zm0 5-4 2.22 9 5 9-5-4-2.22-5 2.78-5-2.78Z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="context-label">Selected entity</p>
+          <p class="context-value" id="selectedEntityLabel">-</p>
+        </div>
+        <button class="btn btn-secondary" id="changeEntityButton" type="button">Change</button>
+      </div>
+
+      <div class="card-grid domain-grid" id="domainGrid"></div>
+      <div class="feedback" id="feedback" role="status" hidden></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" id="backButton" type="button">
+          <span aria-hidden="true"><</span>
+          Back
+        </button>
+        <button class="btn btn-primary" id="accessButton" type="button" disabled>
+          Access
+          <span aria-hidden="true">></span>
+        </button>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+  /*
+    CONFIGURATION
+    Update this section when entities, domains or destinations change.
+    The generated matrix keeps the familiar matrix[entity][domain] lookup,
+    while avoiding hundreds of repeated URLs when the URL pattern is stable.
+  */
+  const APP_CONFIG = {
+    searchPath: "../../search?q=",
+    baseDestinationUrl: "https://wedata.example.com",
+    entityGroups: [
+      {
+        title: "Risk Finance Filieres",
+        type: "risk",
+        items: [
+          { label: "FRR", value: "frr" },
+          { label: "Credit Risk", value: "credit_risk" },
+          { label: "Performance Management", value: "perf_mgmt" },
+          { label: "ALMT", value: "almt" },
+          { label: "Operational Risk", value: "operational_risk" },
+          { label: "Market & Counterparty", value: "market_cpty" },
+          { label: "Insurance Risk", value: "insurance_risk" },
+          { label: "Internal Capital & IFRS9", value: "internal_capital" },
+          { label: "Regulatory Capital", value: "regulatory_cap" },
+          { label: "Stress Testing", value: "stress_testing" }
+        ]
+      },
+      {
+        title: "Business Lines",
+        type: "business",
+        items: [
+          { label: "BCEF", value: "bcef" },
+          { label: "BNL", value: "bnl" },
+          { label: "BPLS", value: "bpls" },
+          { label: "CARDIF", value: "cardif" },
+          { label: "CIB", value: "cib", badge: "In WeData" },
+          { label: "FORTIS", value: "fortis" },
+          { label: "WM", value: "wm", badge: "In WeData" },
+          { label: "EM", value: "em" },
+          { label: "NICKEL", value: "nickel" },
+          { label: "PF", value: "pf", badge: "In WeData" },
+          { label: "ARVAL", value: "arval", badge: "In WeData" },
+          { label: "FLOA", value: "floa" },
+          { label: "REAL ESTATE", value: "real_estate" }
+        ]
+      }
+    ],
+    domains: [
+      { label: "Accounting Parameters", value: "accounting_params" },
+      { label: "BNPP Entities", value: "bnpp_entities" },
+      { label: "Counterparties", value: "counterparties" },
+      { label: "Counterparties Risk Parameters", value: "cpty_risk_params" },
+      { label: "Credit Lines & Financial Liabilities", value: "credit_lines" },
+      { label: "Credit Protections", value: "credit_protections" },
+      { label: "Credit Risk Parameters", value: "credit_risk_params" },
+      { label: "Market Risk Parameters", value: "market_risk_params" },
+      { label: "Operational Risk Parameters", value: "op_risk_params" },
+      { label: "Securities Parameters", value: "securities_params" },
+      { label: "Securization Parameters", value: "securization_params" },
+      { label: "ALL", value: "all" }
+    ],
+    /*
+      Use overrides for exceptions only.
+      Example:
+      urlOverrides: {
+        cib: {
+          all: "https://real-wedata-url.example/cib"
+        }
+      }
+    */
+    urlOverrides: {},
+    /*
+      Use unavailableRoutes to intentionally remove combinations.
+      Example:
+      unavailableRoutes: {
+        frr: ["securization_params"]
+      }
+    */
+    unavailableRoutes: {}
+  };
+
+  const state = {
+    step: 1,
+    selectedEntity: null,
+    selectedDomain: null
+  };
+
+  const elements = {
+    entityGroups: document.getElementById("entityGroups"),
+    domainGrid: document.getElementById("domainGrid"),
+    entityStep: document.getElementById("entityStep"),
+    domainStep: document.getElementById("domainStep"),
+    nextButton: document.getElementById("nextButton"),
+    backButton: document.getElementById("backButton"),
+    accessButton: document.getElementById("accessButton"),
+    changeEntityButton: document.getElementById("changeEntityButton"),
+    selectedEntityLabel: document.getElementById("selectedEntityLabel"),
+    entitySelectionPill: document.getElementById("entitySelectionPill"),
+    feedback: document.getElementById("feedback"),
+    stepEntity: document.getElementById("stepIndicatorEntity"),
+    stepDomain: document.getElementById("stepIndicatorDomain"),
+    stepConnector: document.getElementById("stepConnector"),
+    searchForm: document.getElementById("searchForm"),
+    searchInput: document.getElementById("searchInput")
+  };
+
+  const allEntities = APP_CONFIG.entityGroups.flatMap(group =>
+    group.items.map(item => ({ ...item, groupType: group.type, groupTitle: group.title }))
+  );
+
+  const entityByValue = createLookup(allEntities);
+  const domainByValue = createLookup(APP_CONFIG.domains);
+  const matrix = buildUrlMatrix(APP_CONFIG);
+
+  function createLookup(items) {
+    return items.reduce((lookup, item) => {
+      lookup[item.value] = item;
+      return lookup;
+    }, {});
+  }
+
+  function toUrlSlug(value) {
+    return value.replace(/_/g, "-");
+  }
+
+  function buildUrlMatrix(config) {
+    return allEntities.reduce((entityMatrix, entity) => {
+      const entitySlug = toUrlSlug(entity.value);
+      entityMatrix[entity.value] = config.domains.reduce((domainMatrix, domain) => {
+        const domainSlug = toUrlSlug(domain.value);
+        const override = config.urlOverrides[entity.value] && config.urlOverrides[entity.value][domain.value];
+        const unavailableDomains = config.unavailableRoutes[entity.value] || [];
+
+        if (unavailableDomains.includes(domain.value)) {
+          return domainMatrix;
+        }
+
+        domainMatrix[domain.value] = override || `${config.baseDestinationUrl}/${entitySlug}/${domainSlug}`;
+        return domainMatrix;
+      }, {});
+      return entityMatrix;
+    }, {});
+  }
+
+  function createChoiceCard(item, options) {
+    const button = document.createElement("button");
+    const isSelected = options.selectedValue === item.value;
+
+    button.type = "button";
+    button.className = `choice-card is-${options.variant}${isSelected ? " is-selected" : ""}`;
+    button.dataset.value = item.value;
+    button.setAttribute("aria-pressed", String(isSelected));
+
+    button.innerHTML = `
+      <span class="card-text">
+        <span class="card-label">${item.label}</span>
+        ${item.badge ? `<span class="card-badge">${item.badge}</span>` : ""}
+      </span>
+      <span class="checkmark" aria-hidden="true">✓</span>
+    `;
+
+    button.addEventListener("click", () => options.onSelect(item.value));
+    return button;
+  }
+
+  function renderEntityGroups() {
+    elements.entityGroups.innerHTML = "";
+
+    APP_CONFIG.entityGroups.forEach(group => {
+      const section = document.createElement("section");
+      section.className = "group-block";
+      section.innerHTML = `
+        <div class="group-header">
+          <h3 class="group-title ${group.type === "business" ? "is-green" : ""}">${group.title}</h3>
+          <span class="group-count">${group.items.length} options</span>
+        </div>
+      `;
+
+      const grid = document.createElement("div");
+      grid.className = "card-grid";
+      group.items.forEach(item => {
+        grid.appendChild(createChoiceCard(item, {
+          variant: group.type,
+          selectedValue: state.selectedEntity,
+          onSelect: selectEntity
+        }));
+      });
+
+      section.appendChild(grid);
+      elements.entityGroups.appendChild(section);
+    });
+  }
+
+  function renderDomains() {
+    elements.domainGrid.innerHTML = "";
+
+    APP_CONFIG.domains.forEach(domain => {
+      elements.domainGrid.appendChild(createChoiceCard(domain, {
+        variant: "domain",
+        selectedValue: state.selectedDomain,
+        onSelect: selectDomain
+      }));
+    });
+  }
+
+  function render() {
+    const selectedEntity = entityByValue[state.selectedEntity];
+    const selectedDomain = domainByValue[state.selectedDomain];
+    const isStepTwo = state.step === 2;
+
+    elements.entityStep.classList.toggle("hidden", isStepTwo);
+    elements.domainStep.classList.toggle("hidden", !isStepTwo);
+
+    elements.stepEntity.classList.toggle("is-active", !isStepTwo);
+    elements.stepEntity.classList.toggle("is-complete", isStepTwo);
+    elements.stepDomain.classList.toggle("is-active", isStepTwo);
+    elements.stepConnector.classList.toggle("is-complete", isStepTwo);
+
+    elements.nextButton.disabled = !state.selectedEntity;
+    elements.accessButton.disabled = !state.selectedDomain;
+
+    elements.selectedEntityLabel.textContent = selectedEntity ? selectedEntity.label : "-";
+    elements.entitySelectionPill.textContent = selectedEntity ? `Selected: ${selectedEntity.label}` : "";
+    elements.entitySelectionPill.classList.toggle("hidden", !selectedEntity || isStepTwo);
+
+    elements.accessButton.textContent = selectedDomain ? `Access ${selectedDomain.label}` : "Access";
+
+    renderEntityGroups();
+    if (isStepTwo) {
+      renderDomains();
+    }
+  }
+
+  function selectEntity(entityValue) {
+    state.selectedEntity = entityValue;
+    state.selectedDomain = null;
+    hideFeedback();
+    render();
+  }
+
+  function selectDomain(domainValue) {
+    state.selectedDomain = domainValue;
+    hideFeedback();
+    render();
+  }
+
+  function goToStep(stepNumber) {
+    state.step = stepNumber;
+    hideFeedback();
+    render();
+  }
+
+  function resetNavigator() {
+    state.step = 1;
+    state.selectedEntity = null;
+    state.selectedDomain = null;
+    hideFeedback();
+    render();
+  }
+
+  function getDestinationUrl() {
+    return state.selectedEntity && state.selectedDomain
+      ? matrix[state.selectedEntity] && matrix[state.selectedEntity][state.selectedDomain]
+      : null;
+  }
+
+  function accessDestination() {
+    const url = getDestinationUrl();
+
+    if (!url) {
+      const entityLabel = entityByValue[state.selectedEntity]?.label || "the selected entity";
+      const domainLabel = domainByValue[state.selectedDomain]?.label || "the selected domain";
+      showFeedback(`No WeData destination is configured for ${entityLabel} / ${domainLabel}.`);
+      return;
+    }
+
+    window.location.href = url;
+  }
+
+  function showFeedback(message) {
+    elements.feedback.textContent = message;
+    elements.feedback.hidden = false;
+  }
+
+  function hideFeedback() {
+    elements.feedback.textContent = "";
+    elements.feedback.hidden = true;
+  }
+
+  function submitSearch(event) {
+    event.preventDefault();
+    const query = elements.searchInput.value.trim();
+    if (!query) return;
+    window.top.location.replace(`${APP_CONFIG.searchPath}${encodeURIComponent(query)}`);
+  }
+
+  elements.nextButton.addEventListener("click", () => {
+    if (state.selectedEntity) goToStep(2);
+  });
+  elements.backButton.addEventListener("click", () => goToStep(1));
+  elements.changeEntityButton.addEventListener("click", () => goToStep(1));
+  elements.accessButton.addEventListener("click", accessDestination);
+  elements.searchForm.addEventListener("submit", submitSearch);
+  document.querySelector("[data-action='reset']").addEventListener("click", event => {
+    event.preventDefault();
+    resetNavigator();
+  });
+
+  render();
+</script>
+</body>
+</html>
