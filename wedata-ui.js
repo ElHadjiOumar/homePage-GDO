@@ -29,13 +29,13 @@
   }
 
   function setStaticText() {
-    text("navigatorEyebrow", config.eyebrow);
     text("navigatorTitle", config.title);
     text("navigatorSubtitle", config.subtitle);
     text("stepOneText", config.stepOneLabel);
     text("stepTwoText", config.stepTwoLabel);
     text("entityTitle", config.stepOneTitle);
     text("entityHelp", config.stepOneHelp);
+    byId("entityHelp").classList.toggle("hidden", !config.stepOneHelp);
     text("domainTitle", config.stepTwoTitle);
     text("domainHelp", config.stepTwoHelp);
     text("contextLabel", config.selectedLabel);
@@ -49,10 +49,13 @@
     byId("changeEntityButton").addEventListener("click", () => goToStep(1));
     byId("accessButton").addEventListener("click", accessDestination);
     byId("searchForm").addEventListener("submit", submitSearch);
-    document.querySelector("[data-action='reset']").addEventListener("click", event => {
-      event.preventDefault();
-      resetNavigator();
-    });
+    const resetLink = document.querySelector("[data-action='reset']");
+    if (resetLink) {
+      resetLink.addEventListener("click", event => {
+        event.preventDefault();
+        resetNavigator();
+      });
+    }
   }
 
   function render() {
@@ -91,7 +94,6 @@
       section.innerHTML = `
         <div class="group-header">
           <h3 class="group-title ${group.type === "business" ? "is-green" : ""}">${escapeHtml(group.title)}</h3>
-          <span class="group-count">${group.items.length} options</span>
         </div>
       `;
 
