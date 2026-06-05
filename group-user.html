@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WeData Navigator - Group</title>
+<link rel="stylesheet" href="assets/css/wedata.css" />
+</head>
+<body>
+<header class="topbar">
+  <a class="brand-link" href="#" data-action="reset" aria-label="Back to WeData Navigator start">
+    <img class="brand-logo" src="wedata-new-logo.png" alt="WeData" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+    <span class="fallback-logo hidden"><span class="fallback-mark">W</span> WeData</span>
+  </a>
+</header>
+
+<main class="page">
+  <section class="navigator-shell" aria-labelledby="navigatorTitle">
+    <div class="navigator-header">
+      <div>
+        <p class="eyebrow" id="navigatorEyebrow"></p>
+        <h1 id="navigatorTitle"></h1>
+        <p class="subtitle" id="navigatorSubtitle"></p>
+      </div>
+
+      <div class="stepper" aria-label="Navigation progress">
+        <div class="step is-active" id="stepIndicatorEntity">
+          <span class="step-number">1</span>
+          <span id="stepOneText"></span>
+        </div>
+        <div class="step-line" id="stepConnector"></div>
+        <div class="step" id="stepIndicatorDomain">
+          <span class="step-number">2</span>
+          <span id="stepTwoText"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wedata-search-band">
+      <form class="search-form" id="searchForm" role="search">
+        <span class="search-logo" aria-hidden="true"><span>WE</span><span>DATA</span></span>
+        <div class="search-field">
+          <input class="search-input" id="searchInput" type="search" placeholder="What data are you looking for ?" aria-label="Search WeData" />
+          <button class="search-button" type="submit" aria-label="Search">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M9.8 4a5.8 5.8 0 0 1 4.6 9.33l4.64 4.63-1.41 1.42-4.64-4.64A5.8 5.8 0 1 1 9.8 4Zm0 2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <section class="panel" id="entityStep" aria-labelledby="entityTitle">
+      <div class="panel-top">
+        <div>
+          <h2 class="panel-title" id="entityTitle"></h2>
+          <p class="panel-help" id="entityHelp"></p>
+        </div>
+        <span class="selection-pill hidden" id="entitySelectionPill"></span>
+      </div>
+
+      <div class="entity-groups" id="entityGroups"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="nextButton" type="button" disabled>
+          Continue
+          <span aria-hidden="true">&gt;</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="domainStep" aria-labelledby="domainTitle">
+      <div class="panel-top">
+        <div>
+          <h2 class="panel-title" id="domainTitle"></h2>
+          <p class="panel-help" id="domainHelp"></p>
+        </div>
+      </div>
+
+      <div class="context-box">
+        <div class="context-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 3 3 8l9 5 9-5-9-5Zm-5 8.1-4 2.22 9 5 9-5-4-2.22-5 2.78-5-2.78Zm0 5-4 2.22 9 5 9-5-4-2.22-5 2.78-5-2.78Z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="context-label" id="contextLabel"></p>
+          <p class="context-value" id="selectedEntityLabel">-</p>
+        </div>
+        <button class="btn btn-secondary" id="changeEntityButton" type="button">Change</button>
+      </div>
+
+      <div class="card-grid domain-grid" id="domainGrid"></div>
+      <div class="feedback" id="feedback" role="status" hidden></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" id="backButton" type="button">
+          <span aria-hidden="true">&lt;</span>
+          Back
+        </button>
+        <button class="btn btn-primary" id="accessButton" type="button" disabled>
+          <span id="accessButtonText">Access</span>
+          <span aria-hidden="true">&gt;</span>
+        </button>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script src="assets/js/wedata-data.js"></script>
+<script src="assets/js/wedata-ui.js"></script>
+<script>
+  initWeDataNavigator("group");
+</script>
+</body>
+</html>

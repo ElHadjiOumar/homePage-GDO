@@ -92,48 +92,40 @@
     font-weight: 900;
   }
 
-  .search-form {
+  .topbar-actions {
     display: flex;
     align-items: center;
-    width: min(520px, 100%);
+    gap: 26px;
     margin-left: auto;
-    border: 1px solid var(--green-600);
-    border-radius: 999px;
-    background: var(--grey-050);
-    overflow: hidden;
   }
 
-  .search-input {
-    width: 100%;
-    min-width: 0;
-    border: 0;
-    outline: 0;
-    padding: 10px 12px 10px 18px;
-    color: var(--grey-700);
-    background: transparent;
-  }
-
-  .search-button {
+  .topbar-action {
     display: grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    margin: 4px;
-    border: 0;
-    border-radius: 999px;
-    color: var(--white);
-    background: var(--green-600);
-    cursor: pointer;
+    justify-items: center;
+    gap: 3px;
+    color: #616668;
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1.05;
+    text-decoration: none;
   }
 
-  .search-button:hover {
-    background: var(--green-800);
+  .topbar-action svg {
+    color: var(--grey-700);
+  }
+
+  .topbar-action:hover {
+    color: var(--green-800);
+  }
+
+  .topbar-action:hover svg {
+    color: var(--green-700);
   }
 
   .page {
-    max-width: 1120px;
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 34px 24px 42px;
+    padding: 38px 28px 48px;
   }
 
   .navigator-shell {
@@ -149,9 +141,99 @@
     grid-template-columns: 1fr auto;
     gap: 24px;
     align-items: center;
-    padding: 26px 30px;
+    padding: 30px 42px 24px;
     border-bottom: 1px solid var(--border);
     background: linear-gradient(180deg, var(--white), var(--grey-050));
+  }
+
+  .wedata-search-band {
+    display: flex;
+    justify-content: center;
+    padding: 22px 42px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+  }
+
+  .search-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: min(680px, 100%);
+  }
+
+  .search-logo {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 35% 30%, #6fd3cd, var(--green-600) 58%, var(--green-800));
+    color: var(--white);
+    box-shadow: 0 4px 10px rgba(23, 107, 104, 0.25);
+    font-size: 0.94rem;
+    font-weight: 950;
+    line-height: 0.88;
+    letter-spacing: 0;
+    text-align: center;
+  }
+
+  .search-logo span:last-child {
+    color: #102528;
+    font-size: 0.66rem;
+    letter-spacing: 0.03em;
+  }
+
+  .search-field {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 58px;
+    border: 3px solid var(--green-600);
+    border-radius: 999px;
+    background: var(--grey-050);
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(16, 24, 40, 0.08);
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    padding: 14px 16px 14px 26px;
+    color: var(--grey-700);
+    font-size: 0.92rem;
+    font-style: italic;
+    background: transparent;
+  }
+
+  .search-input:focus {
+    outline: none;
+  }
+
+  .search-field:focus-within {
+    border-color: var(--green-800);
+    box-shadow: 0 0 0 3px rgba(60, 181, 174, 0.28), inset 0 1px 3px rgba(16, 24, 40, 0.08);
+  }
+
+  .search-button {
+    display: grid;
+    place-items: center;
+    width: 62px;
+    height: 42px;
+    margin: 5px 7px 5px 0;
+    border: 0;
+    border-radius: 999px;
+    color: var(--white);
+    background: var(--green-600);
+    cursor: pointer;
+  }
+
+  .search-button:hover {
+    background: var(--green-800);
   }
 
   .eyebrow {
@@ -240,7 +322,7 @@
   }
 
   .panel {
-    padding: 28px 30px 30px;
+    padding: 36px 42px 38px;
   }
 
   .panel-top {
@@ -283,7 +365,7 @@
 
   .entity-groups {
     display: grid;
-    gap: 18px;
+    gap: 22px;
   }
 
   .group-block {
@@ -297,7 +379,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 18px;
-    padding: 15px 18px;
+    padding: 18px 22px;
     border-bottom: 1px solid var(--border);
     background: var(--grey-050);
   }
@@ -323,13 +405,14 @@
 
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
-    padding: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
+    gap: 16px;
+    padding: 22px;
   }
 
   .domain-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
     padding: 0;
   }
 
@@ -339,9 +422,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    min-height: 58px;
+    min-height: 74px;
     width: 100%;
-    padding: 13px 14px;
+    padding: 17px 18px;
     border: 1px solid transparent;
     border-radius: var(--radius);
     color: var(--white);
@@ -356,7 +439,7 @@
   }
 
   .choice-card:focus-visible {
-    outline: 3px solid rgba(46, 125, 79, 0.25);
+    outline: 3px solid rgba(60, 181, 174, 0.28);
     outline-offset: 2px;
   }
 
@@ -379,7 +462,7 @@
   }
 
   .choice-card.is-domain {
-    min-height: 66px;
+    min-height: 128px;
     border-color: var(--border);
     background: var(--white);
     color: var(--grey-900);
@@ -393,7 +476,7 @@
 
   .choice-card.is-selected {
     border-color: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 0 0 3px rgba(46, 125, 79, 0.20), 0 8px 18px rgba(16, 24, 40, 0.12);
+    box-shadow: 0 0 0 3px rgba(60, 181, 174, 0.22), 0 8px 18px rgba(16, 24, 40, 0.12);
   }
 
   .choice-card.is-domain.is-selected {
@@ -409,7 +492,7 @@
   }
 
   .card-label {
-    font-size: 0.84rem;
+    font-size: 0.92rem;
     font-weight: 850;
     letter-spacing: 0.02em;
     line-height: 1.22;
@@ -535,7 +618,7 @@
   .btn-primary {
     background: var(--green-600);
     color: var(--white);
-    box-shadow: 0 6px 14px rgba(46, 125, 79, 0.24);
+    box-shadow: 0 6px 14px rgba(60, 181, 174, 0.26);
   }
 
   .btn-primary:hover:not(:disabled) {
@@ -575,8 +658,29 @@
       padding: 14px 18px;
     }
 
-    .search-form {
+    .topbar-actions {
+      width: 100%;
+      justify-content: flex-end;
       margin-left: 0;
+    }
+
+    .wedata-search-band {
+      padding: 18px;
+    }
+
+    .search-form {
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .search-logo {
+      width: 54px;
+      height: 54px;
+      font-size: 0.82rem;
+    }
+
+    .search-field {
+      min-height: 52px;
     }
 
     .page {
@@ -585,7 +689,7 @@
 
     .navigator-header {
       grid-template-columns: 1fr;
-      padding: 22px 18px;
+      padding: 22px 18px 18px;
     }
 
     .stepper {
@@ -599,6 +703,22 @@
 
     .panel {
       padding: 22px 18px 24px;
+    }
+
+    .card-grid,
+    .domain-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .domain-grid {
+      padding: 0;
+    }
+
+    .choice-card,
+    .choice-card.is-domain {
+      min-height: 72px;
     }
 
     .panel-top,
@@ -643,14 +763,22 @@
     <span class="fallback-logo hidden"><span class="fallback-mark">W</span> WeData</span>
   </a>
 
-  <form class="search-form" id="searchForm" role="search">
-    <input class="search-input" id="searchInput" type="search" placeholder="What data are you looking for?" aria-label="Search WeData" />
-    <button class="search-button" type="submit" aria-label="Search">
-      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-        <path fill="currentColor" d="M9.8 4a5.8 5.8 0 0 1 4.6 9.33l4.64 4.63-1.41 1.42-4.64-4.64A5.8 5.8 0 1 1 9.8 4Zm0 2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/>
+  <nav class="topbar-actions" aria-label="Quick links">
+    <a class="topbar-action" href="#" aria-label="Get Started">
+      <svg width="27" height="27" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5Z"/>
       </svg>
-    </button>
-  </form>
+      <span>Get</span>
+      <span>Started</span>
+    </a>
+    <a class="topbar-action" href="#" aria-label="Support">
+      <svg width="27" height="27" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M11 18h2v-2h-2v2Zm1-16a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm0-14a3 3 0 0 0-3 3h2a1 1 0 1 1 1 1c-1.1 0-2 .9-2 2v2h2v-2c1.66 0 3-1.34 3-3s-1.34-3-3-3Z"/>
+      </svg>
+      <span>Support</span>
+      <span>&nbsp;</span>
+    </a>
+  </nav>
 </header>
 
 <main class="page">
@@ -673,6 +801,20 @@
           <span>Group Data Domain</span>
         </div>
       </div>
+    </div>
+
+    <div class="wedata-search-band">
+      <form class="search-form" id="searchForm" role="search">
+        <span class="search-logo" aria-hidden="true"><span>WE</span><span>DATA</span></span>
+        <div class="search-field">
+          <input class="search-input" id="searchInput" type="search" placeholder="What data are you looking for ?" aria-label="Search WeData" />
+          <button class="search-button" type="submit" aria-label="Search">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M9.8 4a5.8 5.8 0 0 1 4.6 9.33l4.64 4.63-1.41 1.42-4.64-4.64A5.8 5.8 0 1 1 9.8 4Zm0 2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/>
+            </svg>
+          </button>
+        </div>
+      </form>
     </div>
 
     <section class="panel" id="entityStep" aria-labelledby="entityTitle">
@@ -736,12 +878,13 @@
   /*
     CONFIGURATION
     Update this section when entities, domains or destinations change.
-    The generated matrix keeps the familiar matrix[entity][domain] lookup,
-    while avoiding hundreds of repeated URLs when the URL pattern is stable.
+    Navigation uses: matrix[entity][domain] = "view UUID".
+    The final URL is built automatically from the current portal origin:
+    https://current-wedata-host/global-view?view=<UUID>
   */
   const APP_CONFIG = {
     searchPath: "../../search?q=",
-    baseDestinationUrl: "https://wedata.example.com",
+    viewPath: "/global-view?view=",
     entityGroups: [
       {
         title: "Risk Finance Filieres",
@@ -794,23 +937,31 @@
       { label: "ALL", value: "all" }
     ],
     /*
-      Use overrides for exceptions only.
-      Example:
-      urlOverrides: {
-        cib: {
-          all: "https://real-wedata-url.example/cib"
-        }
-      }
+      View matrix.
+
+      Add only combinations that have an existing WeData view.
+      Missing or empty values intentionally block navigation and show a message.
+
+      Easy example to find and update:
+      CARDIF x ALL is here:
+        cardif.all = "019d33f-cab7-7195-84e9-6d4ad7795e97"
     */
-    urlOverrides: {},
-    /*
-      Use unavailableRoutes to intentionally remove combinations.
-      Example:
-      unavailableRoutes: {
-        frr: ["securization_params"]
+    viewMatrix: {
+      cardif: {
+        accounting_params: "",
+        bnpp_entities: "",
+        counterparties: "",
+        cpty_risk_params: "",
+        credit_lines: "",
+        credit_protections: "",
+        credit_risk_params: "",
+        market_risk_params: "",
+        op_risk_params: "",
+        securities_params: "",
+        securization_params: "",
+        all: "019d33f-cab7-7195-84e9-6d4ad7795e97"
       }
-    */
-    unavailableRoutes: {}
+    }
   };
 
   const state = {
@@ -844,7 +995,7 @@
 
   const entityByValue = createLookup(allEntities);
   const domainByValue = createLookup(APP_CONFIG.domains);
-  const matrix = buildUrlMatrix(APP_CONFIG);
+  const matrix = APP_CONFIG.viewMatrix;
 
   function createLookup(items) {
     return items.reduce((lookup, item) => {
@@ -853,27 +1004,14 @@
     }, {});
   }
 
-  function toUrlSlug(value) {
-    return value.replace(/_/g, "-");
+  function getPortalOrigin() {
+    return window.location.origin && window.location.origin !== "null"
+      ? window.location.origin
+      : "";
   }
 
-  function buildUrlMatrix(config) {
-    return allEntities.reduce((entityMatrix, entity) => {
-      const entitySlug = toUrlSlug(entity.value);
-      entityMatrix[entity.value] = config.domains.reduce((domainMatrix, domain) => {
-        const domainSlug = toUrlSlug(domain.value);
-        const override = config.urlOverrides[entity.value] && config.urlOverrides[entity.value][domain.value];
-        const unavailableDomains = config.unavailableRoutes[entity.value] || [];
-
-        if (unavailableDomains.includes(domain.value)) {
-          return domainMatrix;
-        }
-
-        domainMatrix[domain.value] = override || `${config.baseDestinationUrl}/${entitySlug}/${domainSlug}`;
-        return domainMatrix;
-      }, {});
-      return entityMatrix;
-    }, {});
+  function buildViewUrl(viewId) {
+    return `${getPortalOrigin()}${APP_CONFIG.viewPath}${encodeURIComponent(viewId)}`;
   }
 
   function createChoiceCard(item, options) {
@@ -993,9 +1131,10 @@
   }
 
   function getDestinationUrl() {
-    return state.selectedEntity && state.selectedDomain
-      ? matrix[state.selectedEntity] && matrix[state.selectedEntity][state.selectedDomain]
-      : null;
+    if (!state.selectedEntity || !state.selectedDomain) return null;
+
+    const viewId = matrix[state.selectedEntity] && matrix[state.selectedEntity][state.selectedDomain];
+    return viewId ? buildViewUrl(viewId) : null;
   }
 
   function accessDestination() {
@@ -1004,7 +1143,7 @@
     if (!url) {
       const entityLabel = entityByValue[state.selectedEntity]?.label || "the selected entity";
       const domainLabel = domainByValue[state.selectedDomain]?.label || "the selected domain";
-      showFeedback(`No WeData destination is configured for ${entityLabel} / ${domainLabel}.`);
+      showFeedback(`No WeData view is configured yet for ${entityLabel} / ${domainLabel}. Please choose another Group Data Domain or contact the WeData team.`);
       return;
     }
 
