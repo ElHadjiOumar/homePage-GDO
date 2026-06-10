@@ -5,20 +5,24 @@
     selectedDomain: null
   };
 
-  let config;
+  const config = WEDATA_NAVIGATOR;
   let entityByValue;
-  let domainByValue;
 
-  function initWeDataNavigator(mode) {
-    config = WEDATA_NAVIGATORS[mode];
-    if (!config) throw new Error(`Unknown WeData navigator mode: ${mode}`);
-
-    entityByValue = createLookup(config.groups.flatMap(group => group.items));
-    domainByValue = createLookup(config.domains);
+  function initWeDataNavigator() {
+    entityByValue = createEntityLookup(config.groups);
 
     setStaticText();
     bindEvents();
     render();
+  }
+
+  function createEntityLookup(groups) {
+    return groups.reduce((lookup, group) => {
+      group.items.forEach(item => {
+        lookup[item.value] = { ...item, entityType: group.type };
+      });
+      return lookup;
+    }, {});
   }
 
   function createLookup(items) {
@@ -36,8 +40,6 @@
     text("entityTitle", config.stepOneTitle);
     text("entityHelp", config.stepOneHelp);
     byId("entityHelp").classList.toggle("hidden", !config.stepOneHelp);
-    text("domainTitle", config.stepTwoTitle);
-    text("domainHelp", config.stepTwoHelp);
     text("contextLabel", config.selectedLabel);
   }
 
@@ -49,19 +51,13 @@
     byId("changeEntityButton").addEventListener("click", () => goToStep(1));
     byId("accessButton").addEventListener("click", accessDestination);
     byId("searchForm").addEventListener("submit", submitSearch);
-    const resetLink = document.querySelector("[data-action='reset']");
-    if (resetLink) {
-      resetLink.addEventListener("click", event => {
-        event.preventDefault();
-        resetNavigator();
-      });
-    }
   }
 
   function render() {
     const selectedEntity = entityByValue[state.selectedEntity];
-    const selectedDomain = domainByValue[state.selectedDomain];
+    const selectedDomain = getSelectedDomain();
     const isStepTwo = state.step === 2;
+    const flow = getSelectedFlow();
 
     byId("entityStep").classList.toggle("hidden", isStepTwo);
     byId("domainStep").classList.toggle("hidden", !isStepTwo);
@@ -78,6 +74,9 @@
     text("entitySelectionPill", selectedEntity ? `Selected: ${selectedEntity.label}` : "");
     byId("entitySelectionPill").classList.toggle("hidden", !selectedEntity || isStepTwo);
 
+    text("stepTwoText", flow ? flow.stepTwoLabel : config.stepTwoLabel);
+    text("domainTitle", flow ? flow.stepTwoTitle : "");
+    text("domainHelp", flow ? flow.stepTwoHelp : "");
     text("accessButtonText", selectedDomain ? `Access ${selectedDomain.label}` : "Access");
 
     renderEntityGroups();
@@ -114,9 +113,12 @@
 
   function renderDomains() {
     const root = byId("domainGrid");
-    root.innerHTML = "";
+    const flow = getSelectedFlow();
 
-    config.domains.forEach(domain => {
+    root.innerHTML = "";
+    if (!flow) return;
+
+    flow.domains.forEach(domain => {
       root.appendChild(createChoiceCard(domain, {
         variant: "domain",
         selectedValue: state.selectedDomain,
@@ -164,18 +166,22 @@
     render();
   }
 
-  function resetNavigator() {
-    state.step = 1;
-    state.selectedEntity = null;
-    state.selectedDomain = null;
-    hideFeedback();
-    render();
+  function getSelectedFlow() {
+    const selectedEntity = entityByValue[state.selectedEntity];
+    return selectedEntity ? config.domainFlows[selectedEntity.entityType] : null;
+  }
+
+  function getSelectedDomain() {
+    const flow = getSelectedFlow();
+    if (!flow || !state.selectedDomain) return null;
+    return createLookup(flow.domains)[state.selectedDomain];
   }
 
   function getDestinationUrl() {
-    if (!state.selectedEntity || !state.selectedDomain) return null;
+    const flow = getSelectedFlow();
+    if (!flow || !state.selectedEntity || !state.selectedDomain) return null;
 
-    const viewId = config.matrix[state.selectedEntity] && config.matrix[state.selectedEntity][state.selectedDomain];
+    const viewId = flow.matrix[state.selectedEntity] && flow.matrix[state.selectedEntity][state.selectedDomain];
     return viewId ? buildViewUrl(viewId) : null;
   }
 
@@ -188,9 +194,10 @@
     const url = getDestinationUrl();
 
     if (!url) {
+      const flow = getSelectedFlow();
       const entityLabel = entityByValue[state.selectedEntity]?.label || "the selected item";
-      const domainLabel = domainByValue[state.selectedDomain]?.label || "the selected domain";
-      showFeedback(config.missingMessage.replace("{entity}", entityLabel).replace("{domain}", domainLabel));
+      const domainLabel = getSelectedDomain()?.label || "the selected domain";
+      showFeedback(flow.missingMessage.replace("{entity}", entityLabel).replace("{domain}", domainLabel));
       return;
     }
 

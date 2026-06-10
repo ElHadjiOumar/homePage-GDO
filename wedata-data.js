@@ -3,7 +3,7 @@
 
   The Selection opens WeData global views with:
   window.location.origin + "/global-view?view=" + viewUuid
-  the code will now if you are in dev , stagging or prod
+  the code will know if you are in dev, staging or prod from the current origin.
 */
 
 /* ==========================================================================
@@ -12,22 +12,13 @@
    ========================================================================== */
 
 const pageTexts = {
-  group: {
-    title: "Group Data Domains",
-    subtitle: "Select an entity, then choose the Group Data Domain you want to access.",
-    stepTwoLabel: "Group Data Domain",
-    stepTwoTitle: "Choose a Group Data Domain",
-    stepTwoHelp: "The selected combination will open the matching WeData view.",
-    missingMessage: "No WeData view is configured yet for {entity} / {domain}. Please choose another Group Data Domain or contact the WeData team."
-  },
-  bl: {
-    title: "BL Data Domains",
-    subtitle: "Select an entity, then choose the local BL Data Domain you want to access.",
-    stepTwoLabel: "BL Data Domain",
-    stepTwoTitle: "Choose a BL Data Domain",
-    stepTwoHelp: "The selected combination will open the matching Business Line WeData view.",
-    missingMessage: "No Business Line view is configured yet for {entity} / {domain}. Please choose another BL Data Domain or contact the WeData team."
-  }
+  title: "Data Domain Selection",
+  subtitle: "Select an entity, then choose the Data Domain you want to access.",
+  stepOneLabel: "Entity",
+  stepTwoLabel: "Data Domain",
+  stepOneTitle: "Choose an entity",
+  stepOneHelp: "",
+  selectedLabel: "Selected entity"
 };
 
 /* ==========================================================================
@@ -71,8 +62,8 @@ const businessLines = [
 
 /* ==========================================================================
    EDIT HERE - STEP 2 OPTIONS
-   Group page uses groupDataDomains.
-   BL page uses blDataDomains.
+   If the selected entity is from Risk Finance Filieres, show groupDataDomains.
+   If the selected entity is from Business Lines, show blDataDomains.
    ========================================================================== */
 
 const groupDataDomains = [
@@ -114,22 +105,22 @@ const blDataDomains = [
    - Change WEDATA_VIEW_PATH unless the portal route changes.
 
    Examples:
-   - Group page, CARDIF x ALL:
-     configuredGroupViews.cardif.all
+   - Risk Finance Filiere page, FRR x Accounting Parameters:
+     configuredGroupViews.frr.accounting_params
 
-   - BL page, CARDIF x Risk:
+   - Business Line page, CARDIF x Risk:
      configuredBlViews.cardif.risk
    ========================================================================== */
 
 const configuredGroupViews = {
-  cardif: {
-    all: "019d33f-cab7-7195-84e9-6d4ad7795e97"
+  frr: {
+    all: ""
   }
 };
 
 const configuredBlViews = {
   cardif: {
-    all: ""
+    all: "019d33f-cab7-7195-84e9-6d4ad7795e97"
   }
 };
 
@@ -141,9 +132,9 @@ const configuredBlViews = {
 const WEDATA_VIEW_PATH = "/global-view?view=";
 const WEDATA_SEARCH_PATH = "../../search?q=";
 
-const allNavigationEntities = [
-  ...riskFinanceFilieres,
-  ...businessLines
+const navigationGroups = [
+  { title: "Risk Finance Filieres", type: "risk", items: riskFinanceFilieres },
+  { title: "Business Lines", type: "business", items: businessLines }
 ];
 
 function createViewMatrix(entities, domains, configuredViews) {
@@ -159,31 +150,34 @@ function createViewMatrix(entities, domains, configuredViews) {
   }, {});
 }
 
-const groupViewMatrix = createViewMatrix(allNavigationEntities, groupDataDomains, configuredGroupViews);
-const blViewMatrix = createViewMatrix(allNavigationEntities, blDataDomains, configuredBlViews);
+const groupViewMatrix = createViewMatrix(riskFinanceFilieres, groupDataDomains, configuredGroupViews);
+const blViewMatrix = createViewMatrix(businessLines, blDataDomains, configuredBlViews);
 
-const sharedStepOneConfig = {
-  stepOneLabel: "Entity",
-  stepOneTitle: "Choose an entity",
-  stepOneHelp: "",
-  selectedLabel: "Selected entity",
-  groups: [
-    { title: "Risk Finance Filieres", type: "risk", items: riskFinanceFilieres },
-    { title: "Business Lines", type: "business", items: businessLines }
-  ]
-};
-
-const WEDATA_NAVIGATORS = {
-  group: {
-    ...sharedStepOneConfig,
-    ...pageTexts.group,
-    domains: groupDataDomains,
-    matrix: groupViewMatrix
-  },
-  bl: {
-    ...sharedStepOneConfig,
-    ...pageTexts.bl,
-    domains: blDataDomains,
-    matrix: blViewMatrix
+const WEDATA_NAVIGATOR = {
+  title: pageTexts.title,
+  subtitle: pageTexts.subtitle,
+  stepOneLabel: pageTexts.stepOneLabel,
+  stepTwoLabel: pageTexts.stepTwoLabel,
+  stepOneTitle: pageTexts.stepOneTitle,
+  stepOneHelp: pageTexts.stepOneHelp,
+  selectedLabel: pageTexts.selectedLabel,
+  groups: navigationGroups,
+  domainFlows: {
+    risk: {
+      stepTwoLabel: "Group Data Domain",
+      stepTwoTitle: "Choose a Group Data Domain",
+      stepTwoHelp: "The selected combination will open the matching WeData view.",
+      domains: groupDataDomains,
+      matrix: groupViewMatrix,
+      missingMessage: "No WeData view is configured yet for {entity} / {domain}. Please choose another Group Data Domain or contact the WeData team."
+    },
+    business: {
+      stepTwoLabel: "BL Data Domain",
+      stepTwoTitle: "Choose a BL Data Domain",
+      stepTwoHelp: "The selected combination will open the matching Business Line WeData view.",
+      domains: blDataDomains,
+      matrix: blViewMatrix,
+      missingMessage: "No Business Line view is configured yet for {entity} / {domain}. Please choose another BL Data Domain or contact the WeData team."
+    }
   }
 };
