@@ -1,15 +1,7 @@
-/*
-  data
-
-  The Selection opens WeData global views with:
-  window.location.origin + "/global-view?view=" + viewUuid
-  the code will know if you are in dev, staging or prod from the current origin.
-*/
-
 /* ==========================================================================
-   EDIT HERE - PAGE TEXTS
-   Change these labels if the page wording needs to evolve.
-   ========================================================================== */
+ EDIT HERE - PAGE TEXTS
+ Change these labels if the page wording needs to evolve.
+ ========================================================================== */
 
 const pageTexts = {
   title: "Data Domain Selection",
@@ -22,18 +14,19 @@ const pageTexts = {
 };
 
 /* ==========================================================================
-   EDIT HERE - STEP 1 OPTIONS
-   Add, remove or rename Risk Finance Filieres and Business Lines here.
+ EDIT HERE - STEP 1 OPTIONS
+ Add, remove or rename Risk Finance Filieres and Business Lines here.
 
-   Rules:
-   - label: text shown on the card.
-   - value: stable technical key used in the view matrices. Keep it lowercase.
-   - badge: optional small label shown on the card.
-   ========================================================================== */
+ Rules:
+ - label: text shown on the card.
+ - value: stable technical key used in the view matrices. Keep it lowercase.
+ - badge: optional small label shown on the card.
+ ========================================================================== */
 
 const riskFinanceFilieres = [
   { label: "FRR", value: "frr" },
   { label: "Credit Risk", value: "credit_risk" },
+  { label: "Finance", value: "finance" },
   { label: "Performance Management", value: "perf_mgmt" },
   { label: "ALMT", value: "almt" },
   { label: "Operational Risk", value: "operational_risk" },
@@ -61,12 +54,12 @@ const businessLines = [
 ];
 
 /* ==========================================================================
-   EDIT HERE - STEP 2 OPTIONS
-   If the selected entity is from Risk Finance Filieres, show groupDataDomains.
-   If the selected entity is from Business Lines, the user can switch between:
-   - Filiere: riskFinanceFilieres
-   - Business Line: blDataDomains
-   ========================================================================== */
+ EDIT HERE - STEP 2 OPTIONS
+ If the selected entity is from Risk Finance Filieres, show groupDataDomains.
+ If the selected entity is from Business Lines, the user can switch between:
+ - Filiere: riskFinanceFilieres
+ - Business Line: blDataDomains
+ ========================================================================== */
 
 const groupDataDomains = [
   { label: "Accounting Parameters", value: "accounting_params" },
@@ -94,28 +87,28 @@ const blDataDomains = [
 ];
 
 /* ==========================================================================
-   EDIT HERE - VIEW UUIDS
-   This is the main area to update when views are created in WeData.
+ EDIT HERE - VIEW URL PATHS
+ This is the main area to update when views are created in WeData.
 
-   Do:
-   - Fill only existing view UUIDs.
-   - Leave missing views empty or omit them. Missing views block navigation.
-   - Use the technical keys from the arrays above.
+ Do:
+ - Fill only existing WeData URL paths, starting with /domain/.
+ - Leave missing views empty or omit them. Missing views block navigation.
+ - Use the technical keys from the arrays above.
 
-   Do not:
-   - Put full URLs here.
-   - Change WEDATA_VIEW_PATH unless the portal route changes.
+ Do not:
+ - Put the base URL here. Keep only the path and query string in each combination.
+ - Change WEDATA_VIEW_BASE_URL unless the portal host changes.
 
-   Examples:
-   - Risk Finance Filiere page, FRR x Accounting Parameters:
-     configuredGroupViews.frr.accounting_params
+ Examples:
+ - Risk Finance Filiere page, FRR x Accounting Parameters:
+ configuredGroupViews.frr.accounting_params
 
-   - Business Line page, CARDIF x FRR:
-     configuredBusinessLineFiliereViews.cardif.frr
+ - Business Line page, CARDIF x FRR:
+ configuredBusinessLineFiliereViews.cardif.frr
 
-   - Business Line page, CARDIF x Risk:
-     configuredBlViews.cardif.risk
-   ========================================================================== */
+ - Business Line page, CARDIF x Risk:
+ configuredBlViews.cardif.risk
+ ========================================================================== */
 
 const configuredGroupViews = {
   frr: {
@@ -125,22 +118,24 @@ const configuredGroupViews = {
 
 const configuredBusinessLineFiliereViews = {
   cardif: {
-    frr: ""
+    frr: "",
+    credit_risk: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b",
+    finance: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b"
   }
 };
 
 const configuredBlViews = {
   cardif: {
-    all: "019d33f-cab7-7195-84e9-6d4ad7795e97"
+    all: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b"
   }
 };
 
 /* ==========================================================================
-   DO NOT EDIT BELOW
-   Unless you are changing the navigator behavior, routing, or UI contract.
-   ========================================================================== */
+ DO NOT EDIT BELOW
+ Unless you are changing the navigator behavior, routing, or UI contract.
+ ========================================================================== */
 
-const WEDATA_VIEW_PATH = "/global-view?view=";
+const WEDATA_VIEW_BASE_URL = "https://wedata.group.echonet";
 const WEDATA_SEARCH_PATH = "../../search?q=";
 
 const navigationGroups = [

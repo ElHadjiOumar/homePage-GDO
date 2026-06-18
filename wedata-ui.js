@@ -10,6 +10,11 @@
   let entityByValue;
 
   function initWeDataNavigator() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initWeDataNavigator, { once: true });
+      return;
+    }
+
     entityByValue = createEntityLookup(config.groups);
 
     setStaticText();
@@ -40,22 +45,43 @@
     text("stepTwoText", config.stepTwoLabel);
     text("entityTitle", config.stepOneTitle);
     text("entityHelp", config.stepOneHelp);
-    byId("entityHelp").classList.toggle("hidden", !config.stepOneHelp);
+    toggleClass("entityHelp", "hidden", !config.stepOneHelp);
     text("contextLabel", config.selectedLabel);
   }
 
   function bindEvents() {
-    byId("nextButton").addEventListener("click", () => {
-      if (state.selectedEntity) goToStep(2);
-    });
-    byId("backButton").addEventListener("click", () => goToStep(1));
-    byId("changeEntityButton").addEventListener("click", () => goToStep(1));
-    byId("accessButton").addEventListener("click", accessDestination);
-    byId("searchForm").addEventListener("submit", submitSearch);
-    byId("modeSwitch").addEventListener("click", event => {
+    on("backButton", "click", () => goToStep(1));
+    on("changeEntityButton", "click", () => goToStep(1));
+    on("accessButton", "click", accessDestination);
+    on("searchForm", "submit", submitSearch);
+    on("modeSwitch", "click", event => {
       const button = event.target.closest("[data-mode]");
       if (button) selectContentMode(button.dataset.mode);
     });
+  }
+
+  function on(id, eventName, handler) {
+    const element = byId(id);
+    if (element) element.addEventListener(eventName, handler);
+  }
+
+  function toggleClass(id, className, force) {
+    const element = byId(id);
+    if (element) element.classList.toggle(className, force);
+  }
+
+  function getOrCreateContainer(id, fallbackId, className) {
+    let element = byId(id);
+    if (element) return element;
+
+    const fallback = byId(fallbackId) || document.body;
+    if (!fallback) return null;
+
+    element = document.createElement("div");
+    element.id = id;
+    if (className) element.className = className;
+    fallback.appendChild(element);
+    return element;
   }
 
   function render() {
@@ -65,25 +91,25 @@
     const flow = getSelectedFlow();
     const isBusinessLine = selectedEntity && selectedEntity.entityType === "business";
 
-    byId("entityStep").classList.toggle("hidden", isStepTwo);
-    byId("domainStep").classList.toggle("hidden", !isStepTwo);
+    toggleClass("entityStep", "hidden", isStepTwo);
+    toggleClass("domainStep", "hidden", !isStepTwo);
 
-    byId("stepIndicatorEntity").classList.toggle("is-active", !isStepTwo);
-    byId("stepIndicatorEntity").classList.toggle("is-complete", isStepTwo);
-    byId("stepIndicatorDomain").classList.toggle("is-active", isStepTwo);
-    byId("stepConnector").classList.toggle("is-complete", isStepTwo);
+    toggleClass("stepIndicatorEntity", "is-active", !isStepTwo);
+    toggleClass("stepIndicatorEntity", "is-complete", isStepTwo);
+    toggleClass("stepIndicatorDomain", "is-active", isStepTwo);
+    toggleClass("stepConnector", "is-complete", isStepTwo);
 
-    byId("nextButton").disabled = !state.selectedEntity;
-    byId("accessButton").disabled = !state.selectedDomain;
+    const accessButton = byId("accessButton");
+    if (accessButton) accessButton.disabled = !state.selectedDomain;
 
     text("selectedEntityLabel", selectedEntity ? selectedEntity.label : "-");
     text("entitySelectionPill", selectedEntity ? `Selected: ${selectedEntity.label}` : "");
-    byId("entitySelectionPill").classList.toggle("hidden", !selectedEntity || isStepTwo);
+    toggleClass("entitySelectionPill", "hidden", !selectedEntity || isStepTwo);
 
     text("stepTwoText", flow ? flow.stepTwoLabel : config.stepTwoLabel);
     text("domainTitle", flow ? flow.stepTwoTitle : "");
     text("domainHelp", flow ? flow.stepTwoHelp : "");
-    text("accessButtonText", selectedDomain ? `Access ${selectedDomain.label}` : "Access");
+    text("accessButtonText", selectedDomain ? "Access " + selectedDomain.label : "Access");
     renderModeSwitch(isStepTwo && isBusinessLine);
 
     renderEntityGroups();
@@ -92,6 +118,7 @@
 
   function renderModeSwitch(isVisible) {
     const switchEl = byId("modeSwitch");
+    if (!switchEl) return;
     switchEl.classList.toggle("hidden", !isVisible);
 
     if (!isVisible) return;
@@ -104,17 +131,18 @@
   }
 
   function renderEntityGroups() {
-    const root = byId("entityGroups");
+    const root = getOrCreateContainer("entityGroups", "entityStep", "entity-groups");
+    if (!root) return;
     root.innerHTML = "";
 
     config.groups.forEach(group => {
       const section = document.createElement("section");
       section.className = "group-block";
       section.innerHTML = `
-        <div class="group-header">
-          <h3 class="group-title ${group.type === "business" ? "is-green" : ""}">${escapeHtml(group.title)}</h3>
-        </div>
-      `;
+ <div class="group-header">
+ <h3 class="group-title ${group.type === "business" ? "is-green" : ""}">${escapeHtml(group.title)}</h3>
+ </div>
+ `;
 
       const grid = document.createElement("div");
       grid.className = "card-grid";
@@ -132,9 +160,10 @@
   }
 
   function renderDomains() {
-    const root = byId("domainGrid");
+    const root = getOrCreateContainer("domainGrid", "domainStep", "card-grid domain-grid");
     const flow = getSelectedFlow();
 
+    if (!root) return;
     root.innerHTML = "";
     if (!flow) return;
 
@@ -156,12 +185,12 @@
     button.dataset.value = item.value;
     button.setAttribute("aria-pressed", String(isSelected));
     button.innerHTML = `
-      <span class="card-text">
-        <span class="card-label">${escapeHtml(item.label)}</span>
-        ${item.badge ? `<span class="card-badge">${escapeHtml(item.badge)}</span>` : ""}
-      </span>
-      <span class="checkmark" aria-hidden="true">&#10003;</span>
-    `;
+ <span class="card-text">
+ <span class="card-label">${escapeHtml(item.label)}</span>
+ ${item.badge ? `<span class="card-badge">${escapeHtml(item.badge)}</span>` : ""}
+ </span>
+ <span class="checkmark" aria-hidden="true">&#10003;</span>
+ `;
 
     button.addEventListener("click", () => options.onSelect(item.value));
     return button;
@@ -171,6 +200,7 @@
     state.selectedEntity = entityValue;
     state.selectedDomain = null;
     state.selectedContentMode = getDefaultContentMode(entityValue);
+    state.step = 2;
     hideFeedback();
     render();
   }
@@ -187,6 +217,7 @@
     state.selectedDomain = domainValue;
     hideFeedback();
     render();
+    accessDestination();
   }
 
   function goToStep(stepNumber) {
@@ -215,6 +246,8 @@
     return flow && flow.modes ? flow.defaultMode : null;
   }
 
+
+
   function getSelectedDomain() {
     const flow = getSelectedFlow();
     if (!flow || !state.selectedDomain) return null;
@@ -229,14 +262,15 @@
     return viewId ? buildViewUrl(viewId) : null;
   }
 
-  function buildViewUrl(viewId) {
-    const origin = window.location.origin && window.location.origin !== "null" ? window.location.origin : "";
-    return `${origin}${WEDATA_VIEW_PATH}${encodeURIComponent(viewId)}`;
+  function buildViewUrl(viewPath) {
+    const baseUrl = typeof WEDATA_VIEW_BASE_URL === "string" ? WEDATA_VIEW_BASE_URL : "";
+    const normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+    if (/^https?:\/\//.test(viewPath)) return viewPath;
+    return normalizedBaseUrl + (viewPath.startsWith("/") ? "" : "/") + viewPath;
   }
 
   function accessDestination() {
     const url = getDestinationUrl();
-
     if (!url) {
       const flow = getSelectedFlow();
       const entityLabel = entityByValue[state.selectedEntity]?.label || "the selected item";
@@ -245,24 +279,29 @@
       return;
     }
 
-    window.location.href = url;
+    window.open(url, "_blank", "noopener");
   }
 
   function submitSearch(event) {
     event.preventDefault();
-    const query = byId("searchInput").value.trim();
+    const searchInput = byId("searchInput");
+    const query = searchInput ? searchInput.value.trim() : "";
     if (!query) return;
     window.top.location.replace(`${WEDATA_SEARCH_PATH}${encodeURIComponent(query)}`);
   }
 
   function showFeedback(message) {
-    byId("feedback").textContent = message;
-    byId("feedback").hidden = false;
+    const feedback = byId("feedback");
+    if (!feedback) return;
+    feedback.textContent = message;
+    feedback.hidden = false;
   }
 
   function hideFeedback() {
-    byId("feedback").textContent = "";
-    byId("feedback").hidden = true;
+    const feedback = byId("feedback");
+    if (!feedback) return;
+    feedback.textContent = "";
+    feedback.hidden = true;
   }
 
   function byId(id) {
@@ -270,7 +309,8 @@
   }
 
   function text(id, value) {
-    byId(id).textContent = value;
+    const element = byId(id);
+    if (element) element.textContent = value;
   }
 
   function escapeHtml(value) {

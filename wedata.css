@@ -18,7 +18,8 @@
   --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.08);
   --shadow-md: 0 10px 24px rgba(16, 24, 40, 0.10);
   --radius: 8px;
-  --font: "Segoe UI", Arial, sans-serif; /* Replace with BNPP font when available. */
+  --font: "Segoe UI", Arial, sans-serif;
+  /* Replace with BNPP font when available. */
 }
 
 * {
@@ -406,24 +407,7 @@ h1 {
 }
 
 .checkmark {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 22px;
-  height: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 999px;
-  color: transparent;
-}
-
-.choice-card.is-domain .checkmark {
-  border-color: var(--grey-300);
-}
-
-.choice-card.is-selected .checkmark {
-  border-color: currentColor;
-  color: currentColor;
-  background: rgba(255, 255, 255, 0.12);
+  display: none;
 }
 
 .context-box {
@@ -500,6 +484,7 @@ h1 {
   outline: 3px solid rgba(60, 181, 174, 0.28);
   outline-offset: 2px;
 }
+
 
 .feedback {
   min-height: 22px;
