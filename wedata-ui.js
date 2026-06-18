@@ -2,7 +2,8 @@
   const state = {
     step: 1,
     selectedEntity: null,
-    selectedDomain: null
+    selectedDomain: null,
+    selectedContentMode: null
   };
 
   const config = WEDATA_NAVIGATOR;
@@ -51,6 +52,10 @@
     byId("changeEntityButton").addEventListener("click", () => goToStep(1));
     byId("accessButton").addEventListener("click", accessDestination);
     byId("searchForm").addEventListener("submit", submitSearch);
+    byId("modeSwitch").addEventListener("click", event => {
+      const button = event.target.closest("[data-mode]");
+      if (button) selectContentMode(button.dataset.mode);
+    });
   }
 
   function render() {
@@ -58,6 +63,7 @@
     const selectedDomain = getSelectedDomain();
     const isStepTwo = state.step === 2;
     const flow = getSelectedFlow();
+    const isBusinessLine = selectedEntity && selectedEntity.entityType === "business";
 
     byId("entityStep").classList.toggle("hidden", isStepTwo);
     byId("domainStep").classList.toggle("hidden", !isStepTwo);
@@ -78,9 +84,23 @@
     text("domainTitle", flow ? flow.stepTwoTitle : "");
     text("domainHelp", flow ? flow.stepTwoHelp : "");
     text("accessButtonText", selectedDomain ? `Access ${selectedDomain.label}` : "Access");
+    renderModeSwitch(isStepTwo && isBusinessLine);
 
     renderEntityGroups();
     if (isStepTwo) renderDomains();
+  }
+
+  function renderModeSwitch(isVisible) {
+    const switchEl = byId("modeSwitch");
+    switchEl.classList.toggle("hidden", !isVisible);
+
+    if (!isVisible) return;
+
+    switchEl.querySelectorAll("[data-mode]").forEach(button => {
+      const isActive = button.dataset.mode === state.selectedContentMode;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
   }
 
   function renderEntityGroups() {
@@ -150,6 +170,15 @@
   function selectEntity(entityValue) {
     state.selectedEntity = entityValue;
     state.selectedDomain = null;
+    state.selectedContentMode = getDefaultContentMode(entityValue);
+    hideFeedback();
+    render();
+  }
+
+  function selectContentMode(mode) {
+    if (mode === state.selectedContentMode) return;
+    state.selectedContentMode = mode;
+    state.selectedDomain = null;
     hideFeedback();
     render();
   }
@@ -168,7 +197,22 @@
 
   function getSelectedFlow() {
     const selectedEntity = entityByValue[state.selectedEntity];
-    return selectedEntity ? config.domainFlows[selectedEntity.entityType] : null;
+    if (!selectedEntity) return null;
+
+    const flow = config.domainFlows[selectedEntity.entityType];
+    if (!flow) return null;
+
+    if (flow.modes) {
+      return flow.modes[state.selectedContentMode || flow.defaultMode];
+    }
+
+    return flow;
+  }
+
+  function getDefaultContentMode(entityValue) {
+    const selectedEntity = entityByValue[entityValue];
+    const flow = selectedEntity && config.domainFlows[selectedEntity.entityType];
+    return flow && flow.modes ? flow.defaultMode : null;
   }
 
   function getSelectedDomain() {

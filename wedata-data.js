@@ -63,7 +63,9 @@ const businessLines = [
 /* ==========================================================================
    EDIT HERE - STEP 2 OPTIONS
    If the selected entity is from Risk Finance Filieres, show groupDataDomains.
-   If the selected entity is from Business Lines, show blDataDomains.
+   If the selected entity is from Business Lines, the user can switch between:
+   - Filiere: riskFinanceFilieres
+   - Business Line: blDataDomains
    ========================================================================== */
 
 const groupDataDomains = [
@@ -108,6 +110,9 @@ const blDataDomains = [
    - Risk Finance Filiere page, FRR x Accounting Parameters:
      configuredGroupViews.frr.accounting_params
 
+   - Business Line page, CARDIF x FRR:
+     configuredBusinessLineFiliereViews.cardif.frr
+
    - Business Line page, CARDIF x Risk:
      configuredBlViews.cardif.risk
    ========================================================================== */
@@ -115,6 +120,12 @@ const blDataDomains = [
 const configuredGroupViews = {
   frr: {
     all: ""
+  }
+};
+
+const configuredBusinessLineFiliereViews = {
+  cardif: {
+    frr: ""
   }
 };
 
@@ -151,6 +162,7 @@ function createViewMatrix(entities, domains, configuredViews) {
 }
 
 const groupViewMatrix = createViewMatrix(riskFinanceFilieres, groupDataDomains, configuredGroupViews);
+const businessLineFiliereViewMatrix = createViewMatrix(businessLines, riskFinanceFilieres, configuredBusinessLineFiliereViews);
 const blViewMatrix = createViewMatrix(businessLines, blDataDomains, configuredBlViews);
 
 const WEDATA_NAVIGATOR = {
@@ -172,12 +184,27 @@ const WEDATA_NAVIGATOR = {
       missingMessage: "No WeData view is configured yet for {entity} / {domain}. Please choose another Group Data Domain or contact the WeData team."
     },
     business: {
-      stepTwoLabel: "BL Data Domain",
-      stepTwoTitle: "Choose a BL Data Domain",
-      stepTwoHelp: "The selected combination will open the matching Business Line WeData view.",
-      domains: blDataDomains,
-      matrix: blViewMatrix,
-      missingMessage: "No Business Line view is configured yet for {entity} / {domain}. Please choose another BL Data Domain or contact the WeData team."
+      defaultMode: "filiere",
+      modes: {
+        filiere: {
+          label: "Filiere",
+          stepTwoLabel: "Filiere",
+          stepTwoTitle: "Choose a Filiere",
+          stepTwoHelp: "The selected combination will open the matching Business Line content organized by filiere.",
+          domains: riskFinanceFilieres,
+          matrix: businessLineFiliereViewMatrix,
+          missingMessage: "No Business Line / Filiere view is configured yet for {entity} / {domain}. Please choose another Filiere or contact the WeData team."
+        },
+        businessLine: {
+          label: "Business Line",
+          stepTwoLabel: "BL Data Domain",
+          stepTwoTitle: "Choose a BL Data Domain",
+          stepTwoHelp: "The selected combination will open the matching Business Line WeData view.",
+          domains: blDataDomains,
+          matrix: blViewMatrix,
+          missingMessage: "No Business Line view is configured yet for {entity} / {domain}. Please choose another BL Data Domain or contact the WeData team."
+        }
+      }
     }
   }
 };
