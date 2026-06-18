@@ -82,6 +82,7 @@ const blDataDomains = [
   { label: "Compliance", value: "compliance" },
   { label: "Privacy & Protection", value: "privacy_protection" },
   { label: "Risk", value: "risk" },
+  { label: "Finance", value: "finance" },
   { label: "Human Resources", value: "human_resources" },
   { label: "ALL", value: "all" }
 ];
@@ -110,6 +111,16 @@ const blDataDomains = [
  configuredBlViews.cardif.risk
  ========================================================================== */
 
+// EDIT HERE - Direct Filiere views.
+// When a user clicks one of these filieres on step 1, the navigator opens the
+// configured view directly instead of showing the Group Data Domain step.
+const configuredFiliereDirectViews = {
+  frr: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b",
+  credit_risk: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b"
+};
+
+const filiereDirectMissingMessage = "No direct WeData view is configured yet for {entity}. Please choose another Filiere or contact the WeData team.";
+
 const configuredGroupViews = {
   frr: {
     all: ""
@@ -126,6 +137,8 @@ const configuredBusinessLineFiliereViews = {
 
 const configuredBlViews = {
   cardif: {
+    risk: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b",
+    finance: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b",
     all: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b"
   }
 };
@@ -169,6 +182,8 @@ const WEDATA_NAVIGATOR = {
   stepOneHelp: pageTexts.stepOneHelp,
   selectedLabel: pageTexts.selectedLabel,
   groups: navigationGroups,
+  filiereDirectViews: configuredFiliereDirectViews,
+  filiereDirectMissingMessage,
   domainFlows: {
     risk: {
       stepTwoLabel: "Group Data Domain",
@@ -179,7 +194,7 @@ const WEDATA_NAVIGATOR = {
       missingMessage: "No WeData view is configured yet for {entity} / {domain}. Please choose another Group Data Domain or contact the WeData team."
     },
     business: {
-      defaultMode: "filiere",
+      defaultMode: "businessLine",
       modes: {
         filiere: {
           label: "Filiere",

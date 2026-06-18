@@ -189,7 +189,6 @@
  <span class="card-label">${escapeHtml(item.label)}</span>
  ${item.badge ? `<span class="card-badge">${escapeHtml(item.badge)}</span>` : ""}
  </span>
- <span class="checkmark" aria-hidden="true">&#10003;</span>
  `;
 
     button.addEventListener("click", () => options.onSelect(item.value));
@@ -197,9 +196,24 @@
   }
 
   function selectEntity(entityValue) {
+    const selectedEntity = entityByValue[entityValue];
+
     state.selectedEntity = entityValue;
     state.selectedDomain = null;
     state.selectedContentMode = getDefaultContentMode(entityValue);
+
+    if (selectedEntity && selectedEntity.entityType === "risk") {
+      const directView = config.filiereDirectViews && config.filiereDirectViews[entityValue];
+      if (directView) {
+        openUrl(buildViewUrl(directView));
+        return;
+      }
+
+      showFeedback(config.filiereDirectMissingMessage.replace("{entity}", selectedEntity.label));
+      render();
+      return;
+    }
+
     state.step = 2;
     hideFeedback();
     render();
@@ -279,6 +293,10 @@
       return;
     }
 
+    openUrl(url);
+  }
+
+  function openUrl(url) {
     window.open(url, "_blank", "noopener");
   }
 

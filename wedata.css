@@ -406,10 +406,6 @@ h1 {
   color: var(--green-800);
 }
 
-.checkmark {
-  display: none;
-}
-
 .context-box {
   display: grid;
   grid-template-columns: auto 1fr auto;
