@@ -249,22 +249,6 @@ h1 {
   line-height: 1.4;
 }
 
-.selection-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 34px;
-  padding: 6px 12px;
-  border: 1px solid var(--green-600);
-  border-radius: 999px;
-  background: var(--green-050);
-  color: var(--green-800);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
 .entity-groups {
   display: grid;
   gap: 22px;
@@ -619,11 +603,6 @@ h1 {
 
   .panel-top {
     display: grid;
-  }
-
-  .selection-pill {
-    width: fit-content;
-    white-space: normal;
   }
 
   .context-box {

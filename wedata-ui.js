@@ -103,9 +103,6 @@
     if (accessButton) accessButton.disabled = !state.selectedDomain;
 
     text("selectedEntityLabel", selectedEntity ? selectedEntity.label : "-");
-    text("entitySelectionPill", selectedEntity ? `Selected: ${selectedEntity.label}` : "");
-    toggleClass("entitySelectionPill", "hidden", !selectedEntity || isStepTwo);
-
     text("stepTwoText", flow ? flow.stepTwoLabel : config.stepTwoLabel);
     text("domainTitle", flow ? flow.stepTwoTitle : "");
     text("domainHelp", flow ? flow.stepTwoHelp : "");

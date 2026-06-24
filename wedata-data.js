@@ -149,7 +149,7 @@ const configuredBlViews = {
  ========================================================================== */
 
 const WEDATA_VIEW_BASE_URL = "https://wedata.group.echonet";
-const WEDATA_SEARCH_PATH = "../../search?q=";
+const WEDATA_SEARCH_PATH = "../../search?q=*";
 
 const navigationGroups = [
   { title: "Risk Finance Filieres", type: "risk", items: riskFinanceFilieres },
