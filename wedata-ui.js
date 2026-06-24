@@ -302,7 +302,8 @@
     const searchInput = byId("searchInput");
     const query = searchInput ? searchInput.value.trim() : "";
     if (!query) return;
-    window.top.location.replace(`${WEDATA_SEARCH_PATH}${encodeURIComponent(query)}`);
+    const searchUrl = `${WEDATA_SEARCH_PATH}${encodeURIComponent(String(query))}`;
+    window.top.location.replace(searchUrl);
   }
 
   function showFeedback(message) {
