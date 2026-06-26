@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Domain Selection</title>
+  <title>Supervision & Consolidation Layer</title>
   <link rel="stylesheet" href="wedata.css" />
 </head>
 
@@ -13,7 +13,10 @@
     <section class="navigator-shell" aria-labelledby="navigatorTitle">
       <div class="navigator-header">
         <div>
-          <h1 id="navigatorTitle"></h1>
+          <div class="title-lockup">
+            <span class="title-logo" aria-hidden="true"><span>WE</span><span>DATA</span></span>
+            <h1 id="navigatorTitle"></h1>
+          </div>
           <p class="subtitle" id="navigatorSubtitle"></p>
         </div>
 
@@ -28,22 +31,6 @@
             <span id="stepTwoText"></span>
           </div>
         </div>
-      </div>
-
-      <div class="wedata-search-band">
-        <form class="search-form" id="searchForm" role="search">
-          <span class="search-logo" aria-hidden="true"><span>WE</span><span>DATA</span></span>
-          <div class="search-field">
-            <input class="search-input" id="searchInput" type="search" placeholder="What data are you looking for ?"
-              aria-label="Search WeData" />
-            <button class="search-button" type="submit" aria-label="Search">
-              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="currentColor"
-                  d="M9.8 4a5.8 5.8 0 0 1 4.6 9.33l4.64 4.63-1.41 1.42-4.64-4.64A5.8 5.8 0 1 1 9.8 4Zm0 2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z" />
-              </svg>
-            </button>
-          </div>
-        </form>
       </div>
 
       <section class="panel" id="entityStep" aria-labelledby="entityTitle">
@@ -77,27 +64,16 @@
             <p class="context-label" id="contextLabel"></p>
             <p class="context-value" id="selectedEntityLabel">-</p>
           </div>
-          <button class="btn btn-secondary" id="changeEntityButton" type="button">Change</button>
+          <button class="btn btn-secondary btn-change" id="changeEntityButton" type="button">Go back and change</button>
         </div>
 
         <div class="mode-switch hidden" id="modeSwitch" aria-label="Content organization">
-          <button class="mode-option" id="filiereModeButton" type="button" data-mode="filiere">Filiere</button>
           <button class="mode-option" id="businessLineModeButton" type="button" data-mode="businessLine">Business
             Line</button>
+          <button class="mode-option" id="filiereModeButton" type="button" data-mode="filiere">Filiere</button>
         </div>
 
         <div class="card-grid domain-grid" id="domainGrid"></div>
-
-        <div class="actions">
-          <button class="btn btn-secondary" id="backButton" type="button">
-            <span aria-hidden="true">&lt;</span>
-            Back
-          </button>
-          <button class="btn btn-primary" id="accessButton" type="button" disabled>
-            <span id="accessButtonText">Access</span>
-            <span aria-hidden="true">&gt;</span>
-          </button>
-        </div>
       </section>
 
       <div class="feedback" id="feedback" role="status" hidden></div>

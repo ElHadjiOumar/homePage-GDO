@@ -50,10 +50,7 @@
   }
 
   function bindEvents() {
-    on("backButton", "click", () => goToStep(1));
     on("changeEntityButton", "click", () => goToStep(1));
-    on("accessButton", "click", accessDestination);
-    on("searchForm", "submit", submitSearch);
     on("modeSwitch", "click", event => {
       const button = event.target.closest("[data-mode]");
       if (button) selectContentMode(button.dataset.mode);
@@ -86,7 +83,6 @@
 
   function render() {
     const selectedEntity = entityByValue[state.selectedEntity];
-    const selectedDomain = getSelectedDomain();
     const isStepTwo = state.step === 2;
     const flow = getSelectedFlow();
     const isBusinessLine = selectedEntity && selectedEntity.entityType === "business";
@@ -99,14 +95,10 @@
     toggleClass("stepIndicatorDomain", "is-active", isStepTwo);
     toggleClass("stepConnector", "is-complete", isStepTwo);
 
-    const accessButton = byId("accessButton");
-    if (accessButton) accessButton.disabled = !state.selectedDomain;
-
     text("selectedEntityLabel", selectedEntity ? selectedEntity.label : "-");
     text("stepTwoText", flow ? flow.stepTwoLabel : config.stepTwoLabel);
     text("domainTitle", flow ? flow.stepTwoTitle : "");
     text("domainHelp", flow ? flow.stepTwoHelp : "");
-    text("accessButtonText", selectedDomain ? "Access " + selectedDomain.label : "Access");
     renderModeSwitch(isStepTwo && isBusinessLine);
 
     renderEntityGroups();
@@ -233,6 +225,11 @@
 
   function goToStep(stepNumber) {
     state.step = stepNumber;
+    if (stepNumber === 1) {
+      state.selectedEntity = null;
+      state.selectedDomain = null;
+      state.selectedContentMode = null;
+    }
     hideFeedback();
     render();
   }
@@ -295,15 +292,6 @@
 
   function openUrl(url) {
     window.open(url, "_blank", "noopener");
-  }
-
-  function submitSearch(event) {
-    event.preventDefault();
-    const searchInput = byId("searchInput");
-    const query = searchInput ? searchInput.value.trim() : "";
-    if (!query) return;
-    const searchUrl = `${WEDATA_SEARCH_PATH}${encodeURIComponent(String(query))}`;
-    window.top.location.replace(searchUrl);
   }
 
   function showFeedback(message) {

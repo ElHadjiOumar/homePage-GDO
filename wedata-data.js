@@ -4,7 +4,7 @@
  ========================================================================== */
 
 const pageTexts = {
-  title: "Data Domain Selection",
+  title: "Supervision & Consolidation Layer",
   subtitle: "Select an entity, then choose the Data Domain you want to access.",
   stepOneLabel: "Entity",
   stepTwoLabel: "Data Domain",
@@ -115,11 +115,10 @@ const blDataDomains = [
 // When a user clicks one of these filieres on step 1, the navigator opens the
 // configured view directly instead of showing the Group Data Domain step.
 const configuredFiliereDirectViews = {
-  frr: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b",
-  credit_risk: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b"
+  credit_risk: "/domain/019eb1c9-260a-77c3-adb2-45fec9afdfcb?view=019edf96-c0a5-7489-8f63-72a26abcf15b"
 };
 
-const filiereDirectMissingMessage = "No direct WeData view is configured yet for {entity}. Please choose another Filiere or contact the WeData team.";
+const filiereDirectMissingMessage = "View for '{entity}' no set yet . Working in progress";
 
 const configuredGroupViews = {
   frr: {
@@ -130,16 +129,15 @@ const configuredGroupViews = {
 const configuredBusinessLineFiliereViews = {
   cardif: {
     frr: "",
-    credit_risk: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b",
-    finance: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b"
+    credit_risk: "/community/0199ce53-ce2b-723b-b8aa-aaf6052e45d4?tabbar=Assets&view=019edfc0-a6be-747f-8714-be446ec9c829"
   }
 };
 
 const configuredBlViews = {
   cardif: {
-    risk: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b",
-    finance: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b",
-    all: "/domain/019ac49c-9c8c-7847-b3ab-b8300910af27?view=019c0e39-c60f-70ea-b057-75208f5dc47b"
+    risk: "/domain/019eda2b-9567-72fb-9d2f-5c4463115d38?view=019edfae-e79a-7056-b5f2-975cb5a9614c",
+    finance: "/domain/019eda27-fe8a-74d5-985b-1dc559722ac0?view=019ee00b-52ea-7128-b19f-52a1632a8198",
+    all: "/domain/019eda2b-9567-72fb-9d2f-5c4463115d38?view=019eda2d-3340-7383-b553-c45962c431c2"
   }
 };
 
@@ -148,8 +146,7 @@ const configuredBlViews = {
  Unless you are changing the navigator behavior, routing, or UI contract.
  ========================================================================== */
 
-const WEDATA_VIEW_BASE_URL = "https://wedata.group.echonet";
-const WEDATA_SEARCH_PATH = "/search?q=*";
+const WEDATA_VIEW_BASE_URL = "https://wedata.staging.echonet";
 
 const navigationGroups = [
   { title: "Risk Finance Filieres", type: "risk", items: riskFinanceFilieres },
@@ -191,7 +188,7 @@ const WEDATA_NAVIGATOR = {
       stepTwoHelp: "The selected combination will open the matching WeData view.",
       domains: groupDataDomains,
       matrix: groupViewMatrix,
-      missingMessage: "No WeData view is configured yet for {entity} / {domain}. Please choose another Group Data Domain or contact the WeData team."
+      missingMessage: "View for '{entity} / {domain}' no set yet . Working in progress"
     },
     business: {
       defaultMode: "businessLine",
@@ -203,7 +200,7 @@ const WEDATA_NAVIGATOR = {
           stepTwoHelp: "The selected combination will open the matching Business Line content organized by filiere.",
           domains: riskFinanceFilieres,
           matrix: businessLineFiliereViewMatrix,
-          missingMessage: "No Business Line / Filiere view is configured yet for {entity} / {domain}. Please choose another Filiere or contact the WeData team."
+          missingMessage: "View for '{entity} / {domain}' no set yet . Working in progress"
         },
         businessLine: {
           label: "Business Line",
@@ -212,7 +209,7 @@ const WEDATA_NAVIGATOR = {
           stepTwoHelp: "The selected combination will open the matching Business Line WeData view.",
           domains: blDataDomains,
           matrix: blViewMatrix,
-          missingMessage: "No Business Line view is configured yet for {entity} / {domain}. Please choose another BL Data Domain or contact the WeData team."
+          missingMessage: "View for '{entity} / {domain}' no set yet . Working in progress"
         }
       }
     }
