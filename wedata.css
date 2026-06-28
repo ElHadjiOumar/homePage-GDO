@@ -70,25 +70,11 @@ input {
 }
 
 .title-logo {
-  display: grid;
-  place-items: center;
   flex: 0 0 auto;
-  width: 46px;
-  height: 46px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 35% 30%, #6fd3cd, var(--green-600) 58%, var(--green-800));
-  color: var(--white);
-  box-shadow: 0 3px 8px rgba(23, 107, 104, 0.22);
-  font-size: 0.68rem;
-  font-weight: 950;
-  line-height: 0.88;
-  text-align: center;
-}
-
-.title-logo span:last-child {
-  color: #102528;
-  font-size: 0.48rem;
-  letter-spacing: 0.03em;
+  width: 96px;
+  height: auto;
+  margin-left: 15%;
+  object-fit: contain;
 }
 
 h1 {
@@ -494,13 +480,8 @@ h1 {
   }
 
   .title-logo {
-    width: 40px;
-    height: 40px;
-    font-size: 0.6rem;
-  }
-
-  .title-logo span:last-child {
-    font-size: 0.42rem;
+    width: 82px;
+    margin-left: 0;
   }
 
   .stepper {
