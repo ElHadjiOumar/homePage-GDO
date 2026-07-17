@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supervision & Consolidation Layer</title>
-  <link rel="stylesheet" href="wedata.css" />
+  <link rel="stylesheet" href="wedata.css?v=20260715-2" />
 </head>
 
 <body>
@@ -18,18 +18,7 @@
             <h1 id="navigatorTitle"></h1>
           </div>
           <p class="subtitle" id="navigatorSubtitle"></p>
-        </div>
-
-        <div class="stepper" aria-label="Navigation progress">
-          <div class="step is-active" id="stepIndicatorEntity">
-            <span class="step-number">1</span>
-            <span id="stepOneText"></span>
-          </div>
-          <div class="step-line" id="stepConnector"></div>
-          <div class="step" id="stepIndicatorDomain">
-            <span class="step-number">2</span>
-            <span id="stepTwoText"></span>
-          </div>
+          <p class="access-note" id="navigatorAccessNote"></p>
         </div>
       </div>
 
@@ -53,7 +42,9 @@
           </div>
         </div>
 
-        <div class="context-box">
+        <div class="detail-stage">
+          <div class="stage-label"><span class="stage-number">1</span><span>Choose a BL</span></div>
+          <div class="context-box">
           <div class="context-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path fill="currentColor"
@@ -65,23 +56,33 @@
             <p class="context-value" id="selectedEntityLabel">-</p>
           </div>
           <button class="btn btn-secondary btn-change" id="changeEntityButton" type="button">Go back and change</button>
+          </div>
         </div>
 
-        <div class="mode-switch hidden" id="modeSwitch" aria-label="Content organization">
-          <button class="mode-option" id="businessLineModeButton" type="button" data-mode="businessLine">Business
-            Line</button>
-          <button class="mode-option" id="filiereModeButton" type="button" data-mode="filiere">Filiere</button>
+        <div class="detail-stage hidden" id="modeStage">
+          <div class="stage-label">
+            <span class="stage-number">2</span>
+            <span>Choose content organization <small>(BL or Filiere)</small></span>
+          </div>
+          <div class="mode-switch" id="modeSwitch" aria-label="Content organization">
+            <button class="mode-option" id="businessLineModeButton" type="button" data-mode="businessLine">Business
+              Line</button>
+            <button class="mode-option" id="filiereModeButton" type="button" data-mode="filiere">Filiere</button>
+          </div>
         </div>
 
-        <div class="card-grid domain-grid" id="domainGrid"></div>
+        <div class="detail-stage">
+          <div class="stage-label"><span class="stage-number">3</span><span>Choose a Data Domain</span></div>
+          <div class="card-grid domain-grid" id="domainGrid"></div>
+        </div>
       </section>
 
       <div class="feedback" id="feedback" role="status" hidden></div>
     </section>
   </main>
 
-  <script src="wedata-data.js?v=20260624-2"></script>
-  <script src="wedata-ui.js?v=20260624-2"></script>
+  <script src="wedata-data.js?v=20260715-1"></script>
+  <script src="wedata-ui.js?v=20260715-2"></script>
   <script>
     initWeDataNavigator();
   </script>

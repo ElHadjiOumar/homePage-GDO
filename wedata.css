@@ -54,8 +54,7 @@ input {
 }
 
 .navigator-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: block;
   gap: 18px;
   align-items: center;
   padding: 22px 32px 18px;
@@ -89,6 +88,14 @@ h1 {
   margin: 6px 0 0;
   color: var(--grey-600);
   font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.access-note {
+  max-width: 900px;
+  margin: 2px 0 0;
+  color: var(--grey-700);
+  font-size: 0.76rem;
   line-height: 1.35;
 }
 
@@ -197,6 +204,57 @@ h1 {
   padding: 14px 18px;
   border-bottom: 1px solid var(--border);
   background: var(--grey-050);
+}
+
+.flow-guide {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  color: var(--grey-600);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.flow-guide-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.flow-guide-step.is-active {
+  color: var(--green-800);
+}
+
+.flow-guide-step.is-pending {
+  color: var(--grey-500);
+}
+
+.flow-guide-number,
+.stage-number {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--green-600);
+  color: var(--white);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.flow-guide-step.is-pending .flow-guide-number {
+  border: 1px solid var(--grey-300);
+  background: var(--white);
+  color: var(--grey-500);
+}
+
+.flow-guide-line {
+  width: 22px;
+  height: 1px;
+  background: var(--grey-300);
 }
 
 .group-title {
@@ -331,6 +389,27 @@ h1 {
   background: var(--green-050);
 }
 
+.detail-stage {
+  margin-bottom: 18px;
+}
+
+.stage-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+  color: var(--grey-700);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.stage-label small {
+  display: block;
+  color: var(--grey-500);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
 .context-icon {
   display: grid;
   place-items: center;
@@ -362,7 +441,7 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin: 0 0 14px;
+  margin: 0;
   padding: 4px;
   border: 1px solid var(--green-600);
   border-radius: 999px;
@@ -470,7 +549,6 @@ h1 {
   }
 
   .navigator-header {
-    grid-template-columns: 1fr;
     padding: 18px 16px 16px;
   }
 
@@ -487,6 +565,23 @@ h1 {
   .stepper {
     min-width: 0;
     width: 100%;
+  }
+
+  .group-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .flow-guide {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .flow-guide-line {
+    width: 1px;
+    height: 8px;
+    margin-left: 10px;
   }
 
   .step {

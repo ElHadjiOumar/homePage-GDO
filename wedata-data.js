@@ -5,7 +5,8 @@
 
 const pageTexts = {
   title: "Supervision & Consolidation Layer",
-  subtitle: "Select an entity, then choose the Data Domain you want to access.",
+  subtitle: "Explore Filières or Business Lines content.",
+  accessNote: "RF Filières users have full access; Business Lines users can access RF Filières and their own Business Line only.",
   stepOneLabel: "Entity",
   stepTwoLabel: "Data Domain",
   stepOneTitle: "Choose an entity",
@@ -173,6 +174,7 @@ const blViewMatrix = createViewMatrix(businessLines, blDataDomains, configuredBl
 const WEDATA_NAVIGATOR = {
   title: pageTexts.title,
   subtitle: pageTexts.subtitle,
+  accessNote: pageTexts.accessNote,
   stepOneLabel: pageTexts.stepOneLabel,
   stepTwoLabel: pageTexts.stepTwoLabel,
   stepOneTitle: pageTexts.stepOneTitle,

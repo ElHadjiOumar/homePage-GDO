@@ -41,8 +41,7 @@
   function setStaticText() {
     text("navigatorTitle", config.title);
     text("navigatorSubtitle", config.subtitle);
-    text("stepOneText", config.stepOneLabel);
-    text("stepTwoText", config.stepTwoLabel);
+    text("navigatorAccessNote", config.accessNote);
     text("entityTitle", config.stepOneTitle);
     text("entityHelp", config.stepOneHelp);
     toggleClass("entityHelp", "hidden", !config.stepOneHelp);
@@ -90,13 +89,7 @@
     toggleClass("entityStep", "hidden", isStepTwo);
     toggleClass("domainStep", "hidden", !isStepTwo);
 
-    toggleClass("stepIndicatorEntity", "is-active", !isStepTwo);
-    toggleClass("stepIndicatorEntity", "is-complete", isStepTwo);
-    toggleClass("stepIndicatorDomain", "is-active", isStepTwo);
-    toggleClass("stepConnector", "is-complete", isStepTwo);
-
     text("selectedEntityLabel", selectedEntity ? selectedEntity.label : "-");
-    text("stepTwoText", flow ? flow.stepTwoLabel : config.stepTwoLabel);
     text("domainTitle", flow ? flow.stepTwoTitle : "");
     text("domainHelp", flow ? flow.stepTwoHelp : "");
     renderModeSwitch(isStepTwo && isBusinessLine);
@@ -108,7 +101,7 @@
   function renderModeSwitch(isVisible) {
     const switchEl = byId("modeSwitch");
     if (!switchEl) return;
-    switchEl.classList.toggle("hidden", !isVisible);
+    toggleClass("modeStage", "hidden", !isVisible);
 
     if (!isVisible) return;
 
@@ -127,9 +120,20 @@
     config.groups.forEach(group => {
       const section = document.createElement("section");
       section.className = "group-block";
+      const guideSteps = group.type === "business"
+        ? ["Choose a BL", "Choose content organization", "Choose a Data Domain"]
+        : ["Choose a RF Filiere"];
       section.innerHTML = `
  <div class="group-header">
  <h3 class="group-title ${group.type === "business" ? "is-green" : ""}">${escapeHtml(group.title)}</h3>
+ <div class="flow-guide" aria-label="${guideSteps.length} step${guideSteps.length > 1 ? "s" : ""}">
+ ${guideSteps.map((label, index) => `
+   <span class="flow-guide-step${index === 0 ? " is-active" : " is-pending"}">
+     <span class="flow-guide-number">${index + 1}</span>
+     <span>${escapeHtml(label)}</span>
+   </span>${index < guideSteps.length - 1 ? '<span class="flow-guide-line" aria-hidden="true"></span>' : ""}
+ `).join("")}
+ </div>
  </div>
  `;
 
