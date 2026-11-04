@@ -1,3 +1,11 @@
+/* GUIDE DE MAINTENANCE
+ * index.html : structure de la page ; wedata.css : apparence et responsive.
+ * Ce fichier : textes, listes et liens. wedata-ui.js : reactions aux clics.
+ * Pour ajouter un lien : chercher configuredFiliereContentViews ci-dessous.
+ * label = nom affiche ; value = identifiant utilise pour retrouver les liens.
+ * Garder les value stables lors d'un simple changement de nom.
+ */
+
 /* ==========================================================================
  EDIT HERE - PAGE TEXTS
  Change these labels if the page wording needs to evolve.
@@ -25,16 +33,18 @@ const pageTexts = {
  ========================================================================== */
 
 const riskFinanceFilieres = [
-  { label: "FRR", value: "frr" },
-  { label: "Credit Risk", value: "credit_risk" },
-  { label: "Finance", value: "finance" },
-  { label: "Performance Management", value: "perf_mgmt" },
+  { label: "Accounting & Financial Reporting", value: "accounting_financial_reporting" },
   { label: "ALMT", value: "almt" },
-  { label: "Operational Risk", value: "operational_risk" },
-  { label: "Market & Counterparty", value: "market_cpty" },
+  { label: "Credit Risk", value: "credit_risk" },
+  { label: "ESG", value: "esg" },
   { label: "Insurance Risk", value: "insurance_risk" },
-  { label: "Internal Capital & IFRS9", value: "internal_capital" },
-  { label: "Regulatory Capital", value: "regulatory_cap" },
+  { label: "Liquidity Reporting", value: "liquidity_reporting" },
+  { label: "Market & Counterparty", value: "market_cpty" },
+  { label: "Modelling & Backtesting", value: "modelling_backtesting" },
+  { label: "Operational Risk", value: "operational_risk" },
+  { label: "Performance Management", value: "perf_mgmt" },
+  { label: "Regulatory Capital Reporting", value: "regulatory_cap" },
+  { label: "Resolution Reporting", value: "resolution_reporting" },
   { label: "Stress Testing", value: "stress_testing" }
 ];
 
@@ -56,26 +66,11 @@ const businessLines = [
 
 /* ==========================================================================
  EDIT HERE - STEP 2 OPTIONS
- If the selected entity is from Risk Finance Filieres, show groupDataDomains.
+ Risk Finance Filieres uses the four filiereContentTypes defined below.
  If the selected entity is from Business Lines, the user can switch between:
  - Filiere: riskFinanceFilieres
  - Business Line: blDataDomains
  ========================================================================== */
-
-const groupDataDomains = [
-  { label: "Accounting Parameters", value: "accounting_params" },
-  { label: "BNPP Entities", value: "bnpp_entities" },
-  { label: "Counterparties", value: "counterparties" },
-  { label: "Counterparties Risk Parameters", value: "cpty_risk_params" },
-  { label: "Credit Lines & Financial Liabilities", value: "credit_lines" },
-  { label: "Credit Protections", value: "credit_protections" },
-  { label: "Credit Risk Parameters", value: "credit_risk_params" },
-  { label: "Market Risk Parameters", value: "market_risk_params" },
-  { label: "Operational Risk Parameters", value: "op_risk_params" },
-  { label: "Securities Parameters", value: "securities_params" },
-  { label: "Securization Parameters", value: "securization_params" },
-  { label: "ALL", value: "all" }
-];
 
 const blDataDomains = [
   { label: "Actuariat", value: "actuariat" },
@@ -93,7 +88,7 @@ const blDataDomains = [
  This is the main area to update when views are created in WeData.
 
  Do:
- - Fill only existing WeData URL paths, starting with /domain/.
+ - Fill only existing WeData URL paths, starting with /domain/ or /community/.
  - Leave missing views empty or omit them. Missing views block navigation.
  - Use the technical keys from the arrays above.
 
@@ -102,36 +97,43 @@ const blDataDomains = [
  - Change WEDATA_VIEW_BASE_URL unless the portal host changes.
 
  Examples:
- - Risk Finance Filiere page, FRR x Accounting Parameters:
- configuredGroupViews.frr.accounting_params
+ - Risk Finance Filiere page, Credit Risk x Data Quality Rules:
+ configuredFiliereContentViews.credit_risk.quality_rules
 
- - Business Line page, CARDIF x FRR:
- configuredBusinessLineFiliereViews.cardif.frr
+ - Business Line page, CARDIF x Credit Risk:
+ configuredBusinessLineFiliereViews.cardif.credit_risk
 
  - Business Line page, CARDIF x Risk:
  configuredBlViews.cardif.risk
  ========================================================================== */
 
-// EDIT HERE - Direct Filiere views.
-// When a user clicks one of these filieres on step 1, the navigator opens the
-// configured view directly instead of showing the Group Data Domain step.
-const configuredFiliereDirectViews = {
-  credit_risk: "/domain/019eb1c9-260a-77c3-adb2-45fec9afdfcb?view=019edf96-c0a5-7489-8f63-72a26abcf15b"
-};
+// EDIT HERE - Risk Finance Filiere content links.
+// Add paths per filiere using these four keys. Empty links show the existing error message.
+// Example: credit_risk: { business_dictionary: "/domain/...?...", ... }
+// The previous direct Credit Risk URL is kept here for reference only until its
+// content type is confirmed: /domain/019eb1c9-260a-77c3-adb2-45fec9afdfcb?view=019edf96-c0a5-7489-8f63-72a26abcf15b
+const filiereContentTypes = [
+  { label: "Business Data Dictionary", value: "business_dictionary" },
+  { label: "Data Quality Rules", value: "quality_rules" },
+  { label: "Data Labeling", value: "data_labeling" },
+  { label: "Data Quality Issues Register", value: "quality_issues" }
+];
 
-const filiereDirectMissingMessage = "View for '{entity}' no set yet . Working in progress";
-
-const configuredGroupViews = {
-  frr: {
-    all: ""
+const configuredFiliereContentViews = {
+  // Exemple : remplacer "" par "/domain/IDENTIFIANT?view=IDENTIFIANT_VUE".
+  // Pour une autre filiere, copier credit_risk et utiliser sa value (ex. almt).
+  // Chaque filiere peut avoir quatre URL differentes. Un champ vide declenche
+  // le message d'erreur existant, sans ouvrir de nouvel onglet.
+  credit_risk: {
+    business_dictionary: "",
+    quality_rules: "",
+    data_labeling: "",
+    quality_issues: ""
   }
 };
 
 const configuredBusinessLineFiliereViews = {
-  cardif: {
-    frr: "",
-    credit_risk: "/community/0199ce53-ce2b-723b-b8aa-aaf6052e45d4?tabbar=Assets&view=019edfc0-a6be-747f-8714-be446ec9c829"
-  }
+  // Business Line x Filiere destinations will be configured later.
 };
 
 const configuredBlViews = {
@@ -154,6 +156,8 @@ const navigationGroups = [
   { title: "Business Lines", type: "business", items: businessLines }
 ];
 
+// Construit une table de recherche : table[entite][contenu] = chemin du lien.
+// Les combinaisons absentes deviennent "" pour utiliser le meme traitement d'erreur.
 function createViewMatrix(entities, domains, configuredViews) {
   return entities.reduce((matrix, entity) => {
     const entityViews = configuredViews[entity.value] || {};
@@ -167,10 +171,10 @@ function createViewMatrix(entities, domains, configuredViews) {
   }, {});
 }
 
-const groupViewMatrix = createViewMatrix(riskFinanceFilieres, groupDataDomains, configuredGroupViews);
 const businessLineFiliereViewMatrix = createViewMatrix(businessLines, riskFinanceFilieres, configuredBusinessLineFiliereViews);
 const blViewMatrix = createViewMatrix(businessLines, blDataDomains, configuredBlViews);
 
+// Configuration lue par wedata-ui.js : un parcours RF et deux modes pour les BL.
 const WEDATA_NAVIGATOR = {
   title: pageTexts.title,
   subtitle: pageTexts.subtitle,
@@ -181,15 +185,13 @@ const WEDATA_NAVIGATOR = {
   stepOneHelp: pageTexts.stepOneHelp,
   selectedLabel: pageTexts.selectedLabel,
   groups: navigationGroups,
-  filiereDirectViews: configuredFiliereDirectViews,
-  filiereDirectMissingMessage,
   domainFlows: {
     risk: {
-      stepTwoLabel: "Group Data Domain",
-      stepTwoTitle: "Choose a Group Data Domain",
-      stepTwoHelp: "The selected combination will open the matching WeData view.",
-      domains: groupDataDomains,
-      matrix: groupViewMatrix,
+      stepTwoLabel: "Content",
+      stepTwoTitle: "Choose content to explore",
+      stepTwoHelp: "Choose a content type to open its WeData view in a new tab.",
+      domains: filiereContentTypes,
+      matrix: createViewMatrix(riskFinanceFilieres, filiereContentTypes, configuredFiliereContentViews),
       missingMessage: "View for '{entity} / {domain}' no set yet . Working in progress"
     },
     business: {

@@ -5,10 +5,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supervision & Consolidation Layer</title>
-  <link rel="stylesheet" href="wedata.css?v=20260715-2" />
+  <link rel="stylesheet" href="wedata.css?v=20261104-1" />
 </head>
 
 <body>
+  <!-- Structure uniquement : les textes, cartes et liens viennent de wedata-data.js.
+       Les id servent de reperes a wedata-ui.js ; les conserver lors d'un changement de texte. -->
   <main class="page">
     <section class="navigator-shell" aria-labelledby="navigatorTitle">
       <div class="navigator-header">
@@ -43,7 +45,7 @@
         </div>
 
         <div class="detail-stage">
-          <div class="stage-label"><span class="stage-number">1</span><span>Choose a BL</span></div>
+          <div class="stage-label"><span class="stage-number">1</span><span id="entityStageLabel">Choose an entity</span></div>
           <div class="context-box">
           <div class="context-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24">
@@ -72,17 +74,20 @@
         </div>
 
         <div class="detail-stage">
-          <div class="stage-label"><span class="stage-number">3</span><span>Choose a Data Domain</span></div>
+          <div class="stage-label"><span class="stage-number" id="destinationStageNumber">3</span><span id="destinationStageLabel">Choose a Data Domain</span></div>
           <div class="card-grid domain-grid" id="domainGrid"></div>
         </div>
       </section>
 
+      <!-- Zone reutilisee pour le message existant lorsqu'un lien est vide. -->
       <div class="feedback" id="feedback" role="status" hidden></div>
     </section>
   </main>
 
-  <script src="wedata-data.js?v=20260715-1"></script>
-  <script src="wedata-ui.js?v=20260715-2"></script>
+  <!-- Charger les donnees avant le comportement. Changer la version ?v= apres
+       une publication pour eviter que le navigateur garde les anciens fichiers. -->
+  <script src="wedata-data.js?v=20261104-1"></script>
+  <script src="wedata-ui.js?v=20261104-1"></script>
   <script>
     initWeDataNavigator();
   </script>

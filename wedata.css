@@ -1,3 +1,5 @@
+/* Apparence de la page : couleurs communes ici, composants ensuite,
+   puis adaptations tablette/mobile dans les @media en fin de fichier. */
 :root {
   --green-800: #176b68;
   --green-700: #248f89;
@@ -66,13 +68,14 @@ input {
   display: flex;
   align-items: center;
   gap: 14px;
+  min-width: 0;
 }
 
 .title-logo {
   flex: 0 0 auto;
   width: 96px;
   height: auto;
-  margin-left: 15%;
+  margin-left: 0;
   object-fit: contain;
 }
 
@@ -201,6 +204,7 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  flex-wrap: wrap;
   padding: 14px 18px;
   border-bottom: 1px solid var(--border);
   background: var(--grey-050);
@@ -379,7 +383,7 @@ h1 {
 
 .context-box {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
   margin-bottom: 14px;
@@ -435,6 +439,7 @@ h1 {
   font-weight: 900;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .mode-switch {
@@ -543,6 +548,8 @@ h1 {
   display: none !important;
 }
 
+/* Tablette et mobile : les cartes passent sur une colonne et les etapes
+   s'empilent. Les textes longs peuvent revenir a la ligne sans deborder. */
 @media (max-width: 780px) {
   .page {
     padding: 14px 10px 22px;
@@ -619,7 +626,7 @@ h1 {
   }
 
   .context-box {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
   .context-box .btn {
@@ -638,5 +645,12 @@ h1 {
 
   .feedback {
     margin: 0 16px 18px;
+  }
+}
+
+/* Petit telephone : laisse suffisamment de place au titre a cote du logo. */
+@media (max-width: 380px) {
+  .title-lockup {
+    flex-wrap: wrap;
   }
 }

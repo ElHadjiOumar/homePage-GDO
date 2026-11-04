@@ -1,4 +1,7 @@
+// Ce fichier gere l'affichage ; les listes et URL se modifient dans wedata-data.js.
+// Parcours : choix d'une entite -> choix du contenu -> ouverture ou erreur en bas.
 (function () {
+  // Memoire de la selection : etape 1 = liste ; etape 2 = choix de destination.
   const state = {
     step: 1,
     selectedEntity: null,
@@ -9,6 +12,7 @@
   const config = WEDATA_NAVIGATOR;
   let entityByValue;
 
+  // Attend que le HTML soit pret, puis branche les clics et affiche la page.
   function initWeDataNavigator() {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", initWeDataNavigator, { once: true });
@@ -80,11 +84,17 @@
     return element;
   }
 
+  // Met a jour la page a partir de state, sans recharger le navigateur.
   function render() {
     const selectedEntity = entityByValue[state.selectedEntity];
     const isStepTwo = state.step === 2;
     const flow = getSelectedFlow();
     const isBusinessLine = selectedEntity && selectedEntity.entityType === "business";
+    text("entityStageLabel", isBusinessLine ? "Choose a BL" : "Choose a RF Filiere");
+    text("destinationStageNumber", isBusinessLine ? "3" : "2");
+    text("destinationStageLabel", isBusinessLine
+      ? (state.selectedContentMode === "filiere" ? "Choose a Filiere" : "Choose a Data Domain")
+      : "Choose content");
 
     toggleClass("entityStep", "hidden", isStepTwo);
     toggleClass("domainStep", "hidden", !isStepTwo);
@@ -122,7 +132,7 @@
       section.className = "group-block";
       const guideSteps = group.type === "business"
         ? ["Choose a BL", "Choose content organization", "Choose a Data Domain"]
-        : ["Choose a RF Filiere"];
+        : ["Choose a RF Filiere", "Choose content"];
       section.innerHTML = `
  <div class="group-header">
  <h3 class="group-title ${group.type === "business" ? "is-green" : ""}">${escapeHtml(group.title)}</h3>
@@ -152,6 +162,7 @@
     });
   }
 
+  // Affiche les quatre contenus RF, les filieres BL ou les domaines BL selon le parcours.
   function renderDomains() {
     const root = getOrCreateContainer("domainGrid", "domainStep", "card-grid domain-grid");
     const flow = getSelectedFlow();
@@ -169,6 +180,7 @@
     });
   }
 
+  // Cree une carte cliquable. Un lien vide reste cliquable pour afficher une erreur.
   function createChoiceCard(item, options) {
     const button = document.createElement("button");
     const isSelected = options.selectedValue === item.value;
@@ -188,30 +200,19 @@
     return button;
   }
 
+  // Une filiere RF et une BL passent toutes deux a la deuxieme etape.
   function selectEntity(entityValue) {
-    const selectedEntity = entityByValue[entityValue];
 
     state.selectedEntity = entityValue;
     state.selectedDomain = null;
     state.selectedContentMode = getDefaultContentMode(entityValue);
-
-    if (selectedEntity && selectedEntity.entityType === "risk") {
-      const directView = config.filiereDirectViews && config.filiereDirectViews[entityValue];
-      if (directView) {
-        openUrl(buildViewUrl(directView));
-        return;
-      }
-
-      showFeedback(config.filiereDirectMissingMessage.replace("{entity}", selectedEntity.label));
-      render();
-      return;
-    }
 
     state.step = 2;
     hideFeedback();
     render();
   }
 
+  // Pour une BL uniquement : bascule entre classement par filiere et par domaine BL.
   function selectContentMode(mode) {
     if (mode === state.selectedContentMode) return;
     state.selectedContentMode = mode;
@@ -238,6 +239,7 @@
     render();
   }
 
+  // Retrouve la configuration correspondant au type d'entite et au mode choisi.
   function getSelectedFlow() {
     const selectedEntity = entityByValue[state.selectedEntity];
     if (!selectedEntity) return null;
@@ -266,6 +268,7 @@
     return createLookup(flow.domains)[state.selectedDomain];
   }
 
+  // Cherche le lien du couple selectionne ; null signifie lien non renseigne.
   function getDestinationUrl() {
     const flow = getSelectedFlow();
     if (!flow || !state.selectedEntity || !state.selectedDomain) return null;
@@ -274,6 +277,7 @@
     return viewId ? buildViewUrl(viewId) : null;
   }
 
+  // Ajoute le serveur commun au chemin ; accepte aussi une URL complete.
   function buildViewUrl(viewPath) {
     const baseUrl = typeof WEDATA_VIEW_BASE_URL === "string" ? WEDATA_VIEW_BASE_URL : "";
     const normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
@@ -281,6 +285,7 @@
     return normalizedBaseUrl + (viewPath.startsWith("/") ? "" : "/") + viewPath;
   }
 
+  // Lien absent : message existant en bas. Lien present : ouverture dans un autre onglet.
   function accessDestination() {
     const url = getDestinationUrl();
     if (!url) {
@@ -321,6 +326,7 @@
     if (element) element.textContent = value;
   }
 
+  // Protege les libelles injectes dans le HTML en traitant les caracteres speciaux.
   function escapeHtml(value) {
     return String(value)
       .replace(/&/g, "&amp;")
