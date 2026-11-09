@@ -10,7 +10,6 @@
  * "/domain/IDENTIFIANT?view=IDENTIFIANT_VUE" ou "/community/IDENTIFIANT?view=...".
  * Le serveur commun est defini en section 6. Un lien vide conserve le message
  * d'erreur actuel ; il ne desactive pas la carte.
- * Les anciennes URL sont archivees dans docs/legacy-view-urls.md.
  */
 
 /* ==========================================================================
