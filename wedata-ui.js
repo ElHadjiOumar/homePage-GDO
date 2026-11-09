@@ -5,8 +5,7 @@
   const state = {
     step: 1,
     selectedEntity: null,
-    selectedDomain: null,
-    selectedContentMode: null
+    selectedDomain: null
   };
 
   const config = WEDATA_NAVIGATOR;
@@ -54,10 +53,7 @@
 
   function bindEvents() {
     on("changeEntityButton", "click", () => goToStep(1));
-    on("modeSwitch", "click", event => {
-      const button = event.target.closest("[data-mode]");
-      if (button) selectContentMode(button.dataset.mode);
-    });
+
   }
 
   function on(id, eventName, handler) {
@@ -91,10 +87,8 @@
     const flow = getSelectedFlow();
     const isBusinessLine = selectedEntity && selectedEntity.entityType === "business";
     text("entityStageLabel", isBusinessLine ? "Choose a BL" : "Choose a RF Filiere");
-    text("destinationStageNumber", isBusinessLine ? "3" : "2");
-    text("destinationStageLabel", isBusinessLine
-      ? (state.selectedContentMode === "filiere" ? "Choose a Filiere" : "Choose a Data Domain")
-      : "Choose content");
+    text("destinationStageNumber", "2");
+    text("destinationStageLabel", "Choose content");
 
     toggleClass("entityStep", "hidden", isStepTwo);
     toggleClass("domainStep", "hidden", !isStepTwo);
@@ -102,24 +96,9 @@
     text("selectedEntityLabel", selectedEntity ? selectedEntity.label : "-");
     text("domainTitle", flow ? flow.stepTwoTitle : "");
     text("domainHelp", flow ? flow.stepTwoHelp : "");
-    renderModeSwitch(isStepTwo && isBusinessLine);
 
     renderEntityGroups();
     if (isStepTwo) renderDomains();
-  }
-
-  function renderModeSwitch(isVisible) {
-    const switchEl = byId("modeSwitch");
-    if (!switchEl) return;
-    toggleClass("modeStage", "hidden", !isVisible);
-
-    if (!isVisible) return;
-
-    switchEl.querySelectorAll("[data-mode]").forEach(button => {
-      const isActive = button.dataset.mode === state.selectedContentMode;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-pressed", String(isActive));
-    });
   }
 
   function renderEntityGroups() {
@@ -131,7 +110,7 @@
       const section = document.createElement("section");
       section.className = "group-block";
       const guideSteps = group.type === "business"
-        ? ["Choose a BL", "Choose content organization", "Choose a Data Domain"]
+        ? ["Choose a BL", "Choose content"]
         : ["Choose a RF Filiere", "Choose content"];
       section.innerHTML = `
  <div class="group-header">
@@ -162,7 +141,7 @@
     });
   }
 
-  // Affiche les quatre contenus RF, les filieres BL ou les domaines BL selon le parcours.
+  // Affiche les quatre contenus communs ; les liens restent propres a chaque entite.
   function renderDomains() {
     const root = getOrCreateContainer("domainGrid", "domainStep", "card-grid domain-grid");
     const flow = getSelectedFlow();
@@ -205,18 +184,8 @@
 
     state.selectedEntity = entityValue;
     state.selectedDomain = null;
-    state.selectedContentMode = getDefaultContentMode(entityValue);
 
     state.step = 2;
-    hideFeedback();
-    render();
-  }
-
-  // Pour une BL uniquement : bascule entre classement par filiere et par domaine BL.
-  function selectContentMode(mode) {
-    if (mode === state.selectedContentMode) return;
-    state.selectedContentMode = mode;
-    state.selectedDomain = null;
     hideFeedback();
     render();
   }
@@ -233,34 +202,18 @@
     if (stepNumber === 1) {
       state.selectedEntity = null;
       state.selectedDomain = null;
-      state.selectedContentMode = null;
     }
     hideFeedback();
     render();
   }
 
-  // Retrouve la configuration correspondant au type d'entite et au mode choisi.
+  // Retrouve les liens RF ou BL selon le type de l'entite selectionnee.
   function getSelectedFlow() {
     const selectedEntity = entityByValue[state.selectedEntity];
     if (!selectedEntity) return null;
 
-    const flow = config.domainFlows[selectedEntity.entityType];
-    if (!flow) return null;
-
-    if (flow.modes) {
-      return flow.modes[state.selectedContentMode || flow.defaultMode];
-    }
-
-    return flow;
+    return config.domainFlows[selectedEntity.entityType] || null;
   }
-
-  function getDefaultContentMode(entityValue) {
-    const selectedEntity = entityByValue[entityValue];
-    const flow = selectedEntity && config.domainFlows[selectedEntity.entityType];
-    return flow && flow.modes ? flow.defaultMode : null;
-  }
-
-
 
   function getSelectedDomain() {
     const flow = getSelectedFlow();

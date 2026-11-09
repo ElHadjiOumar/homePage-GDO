@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supervision & Consolidation Layer</title>
-  <link rel="stylesheet" href="wedata.css?v=20261104-1" />
+  <link rel="stylesheet" href="wedata.css?v=20261109-1" />
 </head>
 
 <body>
@@ -61,20 +61,8 @@
           </div>
         </div>
 
-        <div class="detail-stage hidden" id="modeStage">
-          <div class="stage-label">
-            <span class="stage-number">2</span>
-            <span>Choose content organization <small>(BL or Filiere)</small></span>
-          </div>
-          <div class="mode-switch" id="modeSwitch" aria-label="Content organization">
-            <button class="mode-option" id="businessLineModeButton" type="button" data-mode="businessLine">Business
-              Line</button>
-            <button class="mode-option" id="filiereModeButton" type="button" data-mode="filiere">Filiere</button>
-          </div>
-        </div>
-
         <div class="detail-stage">
-          <div class="stage-label"><span class="stage-number" id="destinationStageNumber">3</span><span id="destinationStageLabel">Choose a Data Domain</span></div>
+          <div class="stage-label"><span class="stage-number" id="destinationStageNumber">2</span><span id="destinationStageLabel">Choose content</span></div>
           <div class="card-grid domain-grid" id="domainGrid"></div>
         </div>
       </section>
@@ -86,8 +74,8 @@
 
   <!-- Charger les donnees avant le comportement. Changer la version ?v= apres
        une publication pour eviter que le navigateur garde les anciens fichiers. -->
-  <script src="wedata-data.js?v=20261104-1"></script>
-  <script src="wedata-ui.js?v=20261104-1"></script>
+  <script src="wedata-data.js?v=20261109-1"></script>
+  <script src="wedata-ui.js?v=20261109-1"></script>
   <script>
     initWeDataNavigator();
   </script>

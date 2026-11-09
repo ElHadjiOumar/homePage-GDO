@@ -1,7 +1,7 @@
 /* GUIDE DE MAINTENANCE
  * index.html : structure de la page ; wedata.css : apparence et responsive.
  * Ce fichier : textes, listes et liens. wedata-ui.js : reactions aux clics.
- * Pour ajouter un lien : chercher configuredFiliereContentViews ci-dessous.
+ * Pour ajouter un lien : chercher configuredFiliereContentViews (RF) ou configuredBusinessLineContentViews (BL).
  * label = nom affiche ; value = identifiant utilise pour retrouver les liens.
  * Garder les value stables lors d'un simple changement de nom.
  */
@@ -16,7 +16,7 @@ const pageTexts = {
   subtitle: "Explore Filières or Business Lines content.",
   accessNote: "RF Filières users have full access; Business Lines users can access RF Filières and their own Business Line only.",
   stepOneLabel: "Entity",
-  stepTwoLabel: "Data Domain",
+  stepTwoLabel: "Content",
   stepOneTitle: "Choose an entity",
   stepOneHelp: "",
   selectedLabel: "Selected entity"
@@ -65,25 +65,6 @@ const businessLines = [
 ];
 
 /* ==========================================================================
- EDIT HERE - STEP 2 OPTIONS
- Risk Finance Filieres uses the four filiereContentTypes defined below.
- If the selected entity is from Business Lines, the user can switch between:
- - Filiere: riskFinanceFilieres
- - Business Line: blDataDomains
- ========================================================================== */
-
-const blDataDomains = [
-  { label: "Actuariat", value: "actuariat" },
-  { label: "Asset Management", value: "asset_management" },
-  { label: "Compliance", value: "compliance" },
-  { label: "Privacy & Protection", value: "privacy_protection" },
-  { label: "Risk", value: "risk" },
-  { label: "Finance", value: "finance" },
-  { label: "Human Resources", value: "human_resources" },
-  { label: "ALL", value: "all" }
-];
-
-/* ==========================================================================
  EDIT HERE - VIEW URL PATHS
  This is the main area to update when views are created in WeData.
 
@@ -100,11 +81,8 @@ const blDataDomains = [
  - Risk Finance Filiere page, Credit Risk x Data Quality Rules:
  configuredFiliereContentViews.credit_risk.quality_rules
 
- - Business Line page, CARDIF x Credit Risk:
- configuredBusinessLineFiliereViews.cardif.credit_risk
-
- - Business Line page, CARDIF x Risk:
- configuredBlViews.cardif.risk
+ - Business Line page, BCEF x Data Quality Rules:
+ configuredBusinessLineContentViews.bcef.quality_rules
  ========================================================================== */
 
 // EDIT HERE - Risk Finance Filiere content links.
@@ -112,7 +90,8 @@ const blDataDomains = [
 // Example: credit_risk: { business_dictionary: "/domain/...?...", ... }
 // The previous direct Credit Risk URL is kept here for reference only until its
 // content type is confirmed: /domain/019eb1c9-260a-77c3-adb2-45fec9afdfcb?view=019edf96-c0a5-7489-8f63-72a26abcf15b
-const filiereContentTypes = [
+// Les deux sections affichent exactement les memes quatre contenus.
+const contentTypes = [
   { label: "Business Data Dictionary", value: "business_dictionary" },
   { label: "Data Quality Rules", value: "quality_rules" },
   { label: "Data Labeling", value: "data_labeling" },
@@ -132,10 +111,22 @@ const configuredFiliereContentViews = {
   }
 };
 
-const configuredBusinessLineFiliereViews = {
-  // Business Line x Filiere destinations will be configured later.
+// EDIT HERE - Quatre liens propres a chaque Business Line.
+// Copier bcef pour une autre BL et remplacer la cle par sa value (ex. cardif).
+// Ne pas reutiliser automatiquement les anciennes vues par domaine : leur
+// correspondance avec les quatre contenus doit etre confirmee.
+const configuredBusinessLineContentViews = {
+  bcef: {
+    business_dictionary: "",
+    quality_rules: "",
+    data_labeling: "",
+    quality_issues: ""
+  }
 };
 
+// Anciennes URL CARDIF par domaine, conservees uniquement comme reference.
+// Elles ne sont pas utilisees par le nouveau parcours.
+/*
 const configuredBlViews = {
   cardif: {
     risk: "/domain/019eda2b-9567-72fb-9d2f-5c4463115d38?view=019edfae-e79a-7056-b5f2-975cb5a9614c",
@@ -143,6 +134,7 @@ const configuredBlViews = {
     all: "/domain/019eda2b-9567-72fb-9d2f-5c4463115d38?view=019eda2d-3340-7383-b553-c45962c431c2"
   }
 };
+*/
 
 /* ==========================================================================
  DO NOT EDIT BELOW
@@ -171,10 +163,7 @@ function createViewMatrix(entities, domains, configuredViews) {
   }, {});
 }
 
-const businessLineFiliereViewMatrix = createViewMatrix(businessLines, riskFinanceFilieres, configuredBusinessLineFiliereViews);
-const blViewMatrix = createViewMatrix(businessLines, blDataDomains, configuredBlViews);
-
-// Configuration lue par wedata-ui.js : un parcours RF et deux modes pour les BL.
+// Configuration lue par wedata-ui.js : meme parcours en deux etapes pour RF et BL.
 const WEDATA_NAVIGATOR = {
   title: pageTexts.title,
   subtitle: pageTexts.subtitle,
@@ -190,32 +179,17 @@ const WEDATA_NAVIGATOR = {
       stepTwoLabel: "Content",
       stepTwoTitle: "Choose content to explore",
       stepTwoHelp: "Choose a content type to open its WeData view in a new tab.",
-      domains: filiereContentTypes,
-      matrix: createViewMatrix(riskFinanceFilieres, filiereContentTypes, configuredFiliereContentViews),
+      domains: contentTypes,
+      matrix: createViewMatrix(riskFinanceFilieres, contentTypes, configuredFiliereContentViews),
       missingMessage: "View for '{entity} / {domain}' no set yet . Working in progress"
     },
     business: {
-      defaultMode: "businessLine",
-      modes: {
-        filiere: {
-          label: "Filiere",
-          stepTwoLabel: "Filiere",
-          stepTwoTitle: "Choose a Filiere",
-          stepTwoHelp: "The selected combination will open the matching Business Line content organized by filiere.",
-          domains: riskFinanceFilieres,
-          matrix: businessLineFiliereViewMatrix,
-          missingMessage: "View for '{entity} / {domain}' no set yet . Working in progress"
-        },
-        businessLine: {
-          label: "Business Line",
-          stepTwoLabel: "BL Data Domain",
-          stepTwoTitle: "Choose a BL Data Domain",
-          stepTwoHelp: "The selected combination will open the matching Business Line WeData view.",
-          domains: blDataDomains,
-          matrix: blViewMatrix,
-          missingMessage: "View for '{entity} / {domain}' no set yet . Working in progress"
-        }
-      }
+      stepTwoLabel: "Content",
+      stepTwoTitle: "Choose content to explore",
+      stepTwoHelp: "Choose a content type to open its WeData view in a new tab.",
+      domains: contentTypes,
+      matrix: createViewMatrix(businessLines, contentTypes, configuredBusinessLineContentViews),
+      missingMessage: "View for '{entity} / {domain}' no set yet . Working in progress"
     }
   }
 };
