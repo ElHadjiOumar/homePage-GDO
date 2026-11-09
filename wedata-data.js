@@ -133,23 +133,23 @@ const configuredBusinessLineContentViews = {
 const businessLineScopes = {
   cibgb: [
     { label: "CIBGB", value: "global" },
-    { label: "EMEA", value: "emea" },
-    { label: "APAC", value: "apac" },
-    { label: "NAR", value: "nar" },
-    { label: "Germany", value: "germany" }
+    { label: "CIBGB EMEA", value: "emea" },
+    { label: "CIBGB APAC", value: "apac" },
+    { label: "CIBGB NAR", value: "nar" },
+    { label: "CIBGB Germany", value: "germany" }
   ],
   cibgm: [
     { label: "CIBGM", value: "global" },
-    { label: "EMEA", value: "emea" },
-    { label: "APAC", value: "apac" },
-    { label: "NAR", value: "nar" },
-    { label: "Germany", value: "germany" }
+    { label: "CIBGM EMEA", value: "emea" },
+    { label: "CIBGM APAC", value: "apac" },
+    { label: "CIBGM NAR", value: "nar" },
+    { label: "CIBGM Germany", value: "germany" }
   ],
   cib2s: [
     { label: "CIB2S", value: "global" },
-    { label: "EMEA", value: "emea" },
-    { label: "APAC", value: "apac" },
-    { label: "Germany", value: "germany" }
+    { label: "CIB2S EMEA", value: "emea" },
+    { label: "CIB2S APAC", value: "apac" },
+    { label: "CIB2S Germany", value: "germany" }
   ]
 };
 
