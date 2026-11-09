@@ -1,15 +1,22 @@
 /* GUIDE DE MAINTENANCE
- * index.html : structure de la page ; wedata.css : apparence et responsive.
- * Ce fichier : textes, listes et liens. wedata-ui.js : reactions aux clics.
- * Pour ajouter un lien : chercher configuredFiliereContentViews (RF) ou configuredBusinessLineContentViews (BL).
- * Pour les regions : chercher configuredBusinessLineScopeContentViews.
- * label = nom affiche ; value = identifiant utilise pour retrouver les liens.
- * Garder les value stables lors d'un simple changement de nom.
+ * Ce fichier contient les textes, les listes et les liens du navigateur.
+ * Les sections 1 a 5 sont les zones de configuration ; la section 6 les assemble.
+ *
+ * label : texte affiche sur une carte. value : cle technique utilisee pour les liens.
+ * Conserver les value lors d'un changement de libelle.
+ * Pour ajouter une entite, copier une entree et utiliser une value unique.
+ *
+ * Pour renseigner un lien, remplacer "" par un chemin WeData existant, par exemple
+ * "/domain/IDENTIFIANT?view=IDENTIFIANT_VUE" ou "/community/IDENTIFIANT?view=...".
+ * Le serveur commun est defini en section 6. Un lien vide conserve le message
+ * d'erreur actuel ; il ne desactive pas la carte.
+ * Les anciennes URL sont archivees dans docs/legacy-view-urls.md.
  */
 
 /* ==========================================================================
- EDIT HERE - PAGE TEXTS
- Change these labels if the page wording needs to evolve.
+ 1. TEXTES DE LA PAGE
+
+ Modifier ici les titres et textes visibles dans la page.
  ========================================================================== */
 
 const pageTexts = {
@@ -24,13 +31,24 @@ const pageTexts = {
 };
 
 /* ==========================================================================
- EDIT HERE - STEP 1 OPTIONS
- Add, remove or rename Risk Finance Filieres and Business Lines here.
+ 2. LES QUATRE CONTENUS COMMUNS
 
- Rules:
- - label: text shown on the card.
- - value: stable technical key used in the view matrices. Keep it lowercase.
- - badge: optional small label shown on the card.
+ Ces quatre cartes sont communes aux filieres et aux Business Lines.
+ Les noms sont partages, mais chaque entite possede ses propres URL.
+ ========================================================================== */
+
+const contentTypes = [
+  { label: "Business Data Dictionary", value: "business_dictionary" },
+  { label: "Data Quality Rules", value: "quality_rules" },
+  { label: "Data Labeling", value: "data_labeling" },
+  { label: "Data Quality Issues Register", value: "quality_issues" }
+];
+
+/* ==========================================================================
+ 3. FILIERES : LISTE PUIS LIENS
+
+ La liste definit les 13 cartes de la section Risk Finance Filieres.
+ Les liens se renseignent dans configuredFiliereContentViews, juste apres la liste.
  ========================================================================== */
 
 const riskFinanceFilieres = [
@@ -48,6 +66,29 @@ const riskFinanceFilieres = [
   { label: "Resolution Reporting", value: "resolution_reporting" },
   { label: "Stress Testing", value: "stress_testing" }
 ];
+
+// Copier credit_risk pour une autre filiere et utiliser sa value (ex. almt).
+// Exemple : configuredFiliereContentViews.credit_risk.quality_rules.
+const configuredFiliereContentViews = {
+  // Exemple : remplacer "" par "/domain/IDENTIFIANT?view=IDENTIFIANT_VUE".
+  // Pour une autre filiere, copier credit_risk et utiliser sa value (ex. almt).
+  // Chaque filiere peut avoir quatre URL differentes. Un champ vide declenche
+  // le message d'erreur existant, sans ouvrir de nouvel onglet.
+  credit_risk: {
+    business_dictionary: "",
+    quality_rules: "",
+    data_labeling: "",
+    quality_issues: ""
+  }
+};
+
+/* ==========================================================================
+ 4. BUSINESS LINES : LISTE PUIS LIENS DES BL SIMPLES
+
+ Garder la liste dans l'ordre alphabetique.
+ Les BL simples ouvrent directement les quatre contenus.
+ CIB2S, CIBGB et CIBGM utilisent les perimetres et les liens de la section 5.
+ ========================================================================== */
 
 const businessLines = [
   { label: "Arval", value: "arval" },
@@ -69,8 +110,26 @@ const businessLines = [
   { label: "Wealth Management", value: "wm" }
 ];
 
-// Seules ces BL demandent un perimetre avant de proposer les quatre contenus.
-// La cle technique global conserve ses liens ; le bouton affiche le nom de la BL.
+// Copier bcef pour une autre BL simple et utiliser sa value (ex. arval).
+// Exemple : configuredBusinessLineContentViews.bcef.quality_rules.
+// Ne pas renseigner ici les liens des BL regionales : utiliser la section 5.
+const configuredBusinessLineContentViews = {
+  bcef: {
+    business_dictionary: "",
+    quality_rules: "",
+    data_labeling: "",
+    quality_issues: ""
+  }
+};
+
+/* ==========================================================================
+ 5. BL REGIONALES : PERIMETRES PUIS LIENS
+
+ Seules les BL de businessLineScopes demandent un choix de perimetre.
+ La cle global correspond au bouton portant le nom de la BL (ex. CIBGB).
+ CIB2S ne comporte pas de perimetre NAR.
+ ========================================================================== */
+
 const businessLineScopes = {
   cibgb: [
     { label: "CIBGB", value: "global" },
@@ -94,110 +153,111 @@ const businessLineScopes = {
   ]
 };
 
-// Chaque couple BL / perimetre possede quatre liens distincts.
+// Chaque couple BL / perimetre possede quatre liens independants.
 // Exemple : configuredBusinessLineScopeContentViews.cibgb.emea.quality_rules.
-// Un champ vide affiche le message d'erreur existant ; aucun lien de repli Global.
+// Un lien regional vide ne reprend jamais le lien du perimetre global.
 const configuredBusinessLineScopeContentViews = {
   cibgb: {
-    global: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    emea: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    apac: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    nar: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    germany: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" }
+    global: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    emea: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    apac: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    nar: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    germany: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    }
   },
   cibgm: {
-    global: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    emea: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    apac: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    nar: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    germany: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" }
+    global: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    emea: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    apac: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    nar: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    germany: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    }
   },
   cib2s: {
-    global: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    emea: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    apac: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
-    germany: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" }
+    global: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    emea: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    apac: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    },
+    germany: {
+      business_dictionary: "",
+      quality_rules: "",
+      data_labeling: "",
+      quality_issues: ""
+    }
   }
 };
 
 /* ==========================================================================
- EDIT HERE - VIEW URL PATHS
- This is the main area to update when views are created in WeData.
+ 6. CONFIGURATION TECHNIQUE
 
- Do:
- - Fill only existing WeData URL paths, starting with /domain/ or /community/.
- - Leave missing views empty or omit them. Missing views block navigation.
- - Use the technical keys from the arrays above.
-
- Do not:
- - Put the base URL here. Keep only the path and query string in each combination.
- - Change WEDATA_VIEW_BASE_URL unless the portal host changes.
-
- Examples:
- - Risk Finance Filiere page, Credit Risk x Data Quality Rules:
- configuredFiliereContentViews.credit_risk.quality_rules
-
- - Business Line page, BCEF x Data Quality Rules:
- configuredBusinessLineContentViews.bcef.quality_rules
+ Modifier WEDATA_VIEW_BASE_URL uniquement si le serveur WeData change.
+ Le reste assemble les donnees ci-dessus pour wedata-ui.js.
+ Il n'est pas necessaire de modifier cette partie pour ajouter des liens.
  ========================================================================== */
 
-// EDIT HERE - Risk Finance Filiere content links.
-// Add paths per filiere using these four keys. Empty links show the existing error message.
-// Example: credit_risk: { business_dictionary: "/domain/...?...", ... }
-// The previous direct Credit Risk URL is kept here for reference only until its
-// content type is confirmed: /domain/019eb1c9-260a-77c3-adb2-45fec9afdfcb?view=019edf96-c0a5-7489-8f63-72a26abcf15b
-// Les deux sections affichent exactement les memes quatre contenus.
-const contentTypes = [
-  { label: "Business Data Dictionary", value: "business_dictionary" },
-  { label: "Data Quality Rules", value: "quality_rules" },
-  { label: "Data Labeling", value: "data_labeling" },
-  { label: "Data Quality Issues Register", value: "quality_issues" }
-];
-
-const configuredFiliereContentViews = {
-  // Exemple : remplacer "" par "/domain/IDENTIFIANT?view=IDENTIFIANT_VUE".
-  // Pour une autre filiere, copier credit_risk et utiliser sa value (ex. almt).
-  // Chaque filiere peut avoir quatre URL differentes. Un champ vide declenche
-  // le message d'erreur existant, sans ouvrir de nouvel onglet.
-  credit_risk: {
-    business_dictionary: "",
-    quality_rules: "",
-    data_labeling: "",
-    quality_issues: ""
-  }
-};
-
-// EDIT HERE - Quatre liens propres a chaque Business Line.
-// Copier bcef pour une autre BL et remplacer la cle par sa value (ex. cardif).
-// Ne pas reutiliser automatiquement les anciennes vues par domaine : leur
-// correspondance avec les quatre contenus doit etre confirmee.
-const configuredBusinessLineContentViews = {
-  bcef: {
-    business_dictionary: "",
-    quality_rules: "",
-    data_labeling: "",
-    quality_issues: ""
-  }
-};
-
-// Anciennes URL CARDIF par domaine, conservees uniquement comme reference.
-// Elles ne sont pas utilisees par le nouveau parcours.
-/*
-const configuredBlViews = {
-  cardif: {
-    risk: "/domain/019eda2b-9567-72fb-9d2f-5c4463115d38?view=019edfae-e79a-7056-b5f2-975cb5a9614c",
-    finance: "/domain/019eda27-fe8a-74d5-985b-1dc559722ac0?view=019ee00b-52ea-7128-b19f-52a1632a8198",
-    all: "/domain/019eda2b-9567-72fb-9d2f-5c4463115d38?view=019eda2d-3340-7383-b553-c45962c431c2"
-  }
-};
-*/
-
-/* ==========================================================================
- DO NOT EDIT BELOW
- Unless you are changing the navigator behavior, routing, or UI contract.
- ========================================================================== */
-
-const WEDATA_VIEW_BASE_URL = "https://wedata.staging.echonet";
+const WEDATA_VIEW_BASE_URL = "https://wedata.group.echonet";
 
 const navigationGroups = [
   { title: "Risk Finance Filieres", type: "risk", items: riskFinanceFilieres },
