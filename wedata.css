@@ -397,6 +397,11 @@ h1 {
   margin-bottom: 18px;
 }
 
+/* Le rappel du perimetre conserve uniquement son libelle. */
+#scopeContext .context-box {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .stage-label {
   display: flex;
   align-items: center;

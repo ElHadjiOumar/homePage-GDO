@@ -2,6 +2,7 @@
  * index.html : structure de la page ; wedata.css : apparence et responsive.
  * Ce fichier : textes, listes et liens. wedata-ui.js : reactions aux clics.
  * Pour ajouter un lien : chercher configuredFiliereContentViews (RF) ou configuredBusinessLineContentViews (BL).
+ * Pour les regions : chercher configuredBusinessLineScopeContentViews.
  * label = nom affiche ; value = identifiant utilise pour retrouver les liens.
  * Garder les value stables lors d'un simple changement de nom.
  */
@@ -49,20 +50,75 @@ const riskFinanceFilieres = [
 ];
 
 const businessLines = [
+  { label: "Arval", value: "arval" },
   { label: "BCEF", value: "bcef" },
+  { label: "BGL", value: "bgl" },
   { label: "BNL", value: "bnl" },
   { label: "BPLS", value: "bpls" },
-  { label: "CARDIF", value: "cardif" },
-  { label: "CIB", value: "cib", badge: "In WeData" },
-  { label: "FORTIS", value: "fortis" },
-  { label: "WM", value: "wm", badge: "In WeData" },
+  { label: "Cardif", value: "cardif" },
+  { label: "CIB2S", value: "cib2s" },
+  { label: "CIBGB", value: "cibgb" },
+  { label: "CIBGM", value: "cibgm" },
   { label: "EM", value: "em" },
-  { label: "NICKEL", value: "nickel" },
-  { label: "PF", value: "pf", badge: "In WeData" },
-  { label: "ARVAL", value: "arval", badge: "In WeData" },
+  { label: "Factoring", value: "factoring" },
   { label: "FLOA", value: "floa" },
-  { label: "REAL ESTATE", value: "real_estate" }
+  { label: "Fortis", value: "fortis" },
+  { label: "Nickel", value: "nickel" },
+  { label: "PF", value: "pf" },
+  { label: "PI", value: "pi" },
+  { label: "Wealth Management", value: "wm" }
 ];
+
+// Seules ces BL demandent un perimetre avant de proposer les quatre contenus.
+// La cle technique global conserve ses liens ; le bouton affiche le nom de la BL.
+const businessLineScopes = {
+  cibgb: [
+    { label: "CIBGB", value: "global" },
+    { label: "EMEA", value: "emea" },
+    { label: "APAC", value: "apac" },
+    { label: "NAR", value: "nar" },
+    { label: "Germany", value: "germany" }
+  ],
+  cibgm: [
+    { label: "CIBGM", value: "global" },
+    { label: "EMEA", value: "emea" },
+    { label: "APAC", value: "apac" },
+    { label: "NAR", value: "nar" },
+    { label: "Germany", value: "germany" }
+  ],
+  cib2s: [
+    { label: "CIB2S", value: "global" },
+    { label: "EMEA", value: "emea" },
+    { label: "APAC", value: "apac" },
+    { label: "Germany", value: "germany" }
+  ]
+};
+
+// Chaque couple BL / perimetre possede quatre liens distincts.
+// Exemple : configuredBusinessLineScopeContentViews.cibgb.emea.quality_rules.
+// Un champ vide affiche le message d'erreur existant ; aucun lien de repli Global.
+const configuredBusinessLineScopeContentViews = {
+  cibgb: {
+    global: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    emea: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    apac: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    nar: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    germany: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" }
+  },
+  cibgm: {
+    global: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    emea: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    apac: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    nar: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    germany: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" }
+  },
+  cib2s: {
+    global: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    emea: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    apac: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" },
+    germany: { business_dictionary: "", quality_rules: "", data_labeling: "", quality_issues: "" }
+  }
+};
 
 /* ==========================================================================
  EDIT HERE - VIEW URL PATHS
@@ -163,7 +219,7 @@ function createViewMatrix(entities, domains, configuredViews) {
   }, {});
 }
 
-// Configuration lue par wedata-ui.js : meme parcours en deux etapes pour RF et BL.
+// Configuration lue par wedata-ui.js : les BL regionales ajoutent un choix de perimetre.
 const WEDATA_NAVIGATOR = {
   title: pageTexts.title,
   subtitle: pageTexts.subtitle,
@@ -174,6 +230,8 @@ const WEDATA_NAVIGATOR = {
   stepOneHelp: pageTexts.stepOneHelp,
   selectedLabel: pageTexts.selectedLabel,
   groups: navigationGroups,
+  businessLineScopes,
+  scopeContentViews: configuredBusinessLineScopeContentViews,
   domainFlows: {
     risk: {
       stepTwoLabel: "Content",

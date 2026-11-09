@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supervision & Consolidation Layer</title>
-  <link rel="stylesheet" href="wedata.css?v=20261109-1" />
+  <link rel="stylesheet" href="wedata.css?v=20261109-3" />
 </head>
 
 <body>
@@ -61,6 +61,14 @@
           </div>
         </div>
 
+        <!-- Visible uniquement apres selection du perimetre d'une BL regionale. -->
+        <div class="detail-stage hidden" id="scopeContext">
+          <div class="stage-label"><span class="stage-number">2</span><span>Selected scope</span></div>
+          <div class="context-box">
+            <div><p class="context-value" id="selectedScopeLabel"></p></div>
+          </div>
+        </div>
+
         <div class="detail-stage">
           <div class="stage-label"><span class="stage-number" id="destinationStageNumber">2</span><span id="destinationStageLabel">Choose content</span></div>
           <div class="card-grid domain-grid" id="domainGrid"></div>
@@ -74,8 +82,8 @@
 
   <!-- Charger les donnees avant le comportement. Changer la version ?v= apres
        une publication pour eviter que le navigateur garde les anciens fichiers. -->
-  <script src="wedata-data.js?v=20261109-1"></script>
-  <script src="wedata-ui.js?v=20261109-1"></script>
+  <script src="wedata-data.js?v=20261109-3"></script>
+  <script src="wedata-ui.js?v=20261109-3"></script>
   <script>
     initWeDataNavigator();
   </script>

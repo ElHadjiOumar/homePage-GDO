@@ -1,10 +1,11 @@
 // Ce fichier gere l'affichage ; les listes et URL se modifient dans wedata-data.js.
-// Parcours : choix d'une entite -> choix du contenu -> ouverture ou erreur en bas.
+// Parcours : entite -> perimetre si BL regionale -> contenu -> ouverture ou erreur en bas.
 (function () {
-  // Memoire de la selection : etape 1 = liste ; etape 2 = choix de destination.
+  // Memoire de la selection : etape 1 = liste ; etape 2 = perimetre ou contenu.
   const state = {
     step: 1,
     selectedEntity: null,
+    selectedScope: null,
     selectedDomain: null
   };
 
@@ -52,7 +53,17 @@
   }
 
   function bindEvents() {
-    on("changeEntityButton", "click", () => goToStep(1));
+    // Un seul retour : contenus regionaux -> perimetres -> liste des entites.
+    on("changeEntityButton", "click", () => {
+      if (state.selectedScope) {
+        state.selectedScope = null;
+        state.selectedDomain = null;
+        hideFeedback();
+        render();
+      } else {
+        goToStep(1);
+      }
+    });
 
   }
 
@@ -87,15 +98,20 @@
     const flow = getSelectedFlow();
     const isBusinessLine = selectedEntity && selectedEntity.entityType === "business";
     text("entityStageLabel", isBusinessLine ? "Choose a BL" : "Choose a RF Filiere");
-    text("destinationStageNumber", "2");
-    text("destinationStageLabel", "Choose content");
+    const scopes = config.businessLineScopes[state.selectedEntity] || [];
+    const choosingScope = scopes.length > 0 && !state.selectedScope;
+    const selectedScope = scopes.find(scope => scope.value === state.selectedScope);
+    text("destinationStageNumber", scopes.length && !choosingScope ? "3" : "2");
+    text("destinationStageLabel", choosingScope ? "Choose a scope" : "Choose content");
+    toggleClass("scopeContext", "hidden", !selectedScope);
+    text("selectedScopeLabel", selectedScope ? selectedScope.label : "");
 
     toggleClass("entityStep", "hidden", isStepTwo);
     toggleClass("domainStep", "hidden", !isStepTwo);
 
     text("selectedEntityLabel", selectedEntity ? selectedEntity.label : "-");
-    text("domainTitle", flow ? flow.stepTwoTitle : "");
-    text("domainHelp", flow ? flow.stepTwoHelp : "");
+    text("domainTitle", choosingScope ? "Choose a scope" : (flow ? flow.stepTwoTitle : ""));
+    text("domainHelp", choosingScope ? "Choose the Business Line or a region to explore its content." : (flow ? flow.stepTwoHelp : ""));
 
     renderEntityGroups();
     if (isStepTwo) renderDomains();
@@ -150,11 +166,14 @@
     root.innerHTML = "";
     if (!flow) return;
 
-    flow.domains.forEach(domain => {
+    const scopes = config.businessLineScopes[state.selectedEntity] || [];
+    const choosingScope = scopes.length > 0 && !state.selectedScope;
+    const choices = choosingScope ? scopes : flow.domains;
+    choices.forEach(domain => {
       root.appendChild(createChoiceCard(domain, {
         variant: "domain",
         selectedValue: state.selectedDomain,
-        onSelect: selectDomain
+        onSelect: choosingScope ? selectScope : selectDomain
       }));
     });
   }
@@ -183,9 +202,18 @@
   function selectEntity(entityValue) {
 
     state.selectedEntity = entityValue;
+    state.selectedScope = null;
     state.selectedDomain = null;
 
     state.step = 2;
+    hideFeedback();
+    render();
+  }
+
+  // Le perimetre est obligatoire pour les trois BL regionales, Global inclus.
+  function selectScope(scopeValue) {
+    state.selectedScope = scopeValue;
+    state.selectedDomain = null;
     hideFeedback();
     render();
   }
@@ -201,6 +229,7 @@
     state.step = stepNumber;
     if (stepNumber === 1) {
       state.selectedEntity = null;
+      state.selectedScope = null;
       state.selectedDomain = null;
     }
     hideFeedback();
@@ -226,7 +255,12 @@
     const flow = getSelectedFlow();
     if (!flow || !state.selectedEntity || !state.selectedDomain) return null;
 
-    const viewId = flow.matrix[state.selectedEntity] && flow.matrix[state.selectedEntity][state.selectedDomain];
+    // Une region lit uniquement ses propres URL, sans utiliser celles d'une autre.
+    const scopes = config.businessLineScopes[state.selectedEntity];
+    const views = scopes
+      ? config.scopeContentViews[state.selectedEntity]?.[state.selectedScope]
+      : flow.matrix[state.selectedEntity];
+    const viewId = views && views[state.selectedDomain];
     return viewId ? buildViewUrl(viewId) : null;
   }
 
@@ -243,7 +277,10 @@
     const url = getDestinationUrl();
     if (!url) {
       const flow = getSelectedFlow();
-      const entityLabel = entityByValue[state.selectedEntity]?.label || "the selected item";
+      const scope = (config.businessLineScopes[state.selectedEntity] || [])
+        .find(item => item.value === state.selectedScope);
+      const entityLabel = (entityByValue[state.selectedEntity]?.label || "the selected item")
+        + (scope ? " / " + scope.label : "");
       const domainLabel = getSelectedDomain()?.label || "the selected domain";
       showFeedback(flow.missingMessage.replace("{entity}", entityLabel).replace("{domain}", domainLabel));
       return;
