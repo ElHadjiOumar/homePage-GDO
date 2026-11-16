@@ -106,7 +106,9 @@ const businessLines = [
   { label: "Nickel", value: "nickel" },
   { label: "PF", value: "pf" },
   { label: "PI", value: "pi" },
-  { label: "Wealth Management", value: "wm" }
+  { label: "Wealth Management", value: "wm" },
+  // Renseigner directUrl pour que ce bouton ouvre directement la vue All Labels.
+  { label: "ALL LABELS", value: "all_labels", directUrl: "" }
 ];
 
 // Copier bcef pour une autre BL simple et utiliser sa value (ex. arval).

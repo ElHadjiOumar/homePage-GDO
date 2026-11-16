@@ -148,7 +148,9 @@
         grid.appendChild(createChoiceCard(item, {
           variant: group.type,
           selectedValue: state.selectedEntity,
-          onSelect: selectEntity
+          onSelect: Object.prototype.hasOwnProperty.call(item, "directUrl")
+            ? () => openDirectDestination(item)
+            : selectEntity
         }));
       });
 
@@ -208,6 +210,18 @@
     state.step = 2;
     hideFeedback();
     render();
+  }
+
+  // Les raccourcis de la liste d'entites ouvrent leur URL sans etape intermediaire.
+  function openDirectDestination(item) {
+    const url = item.directUrl ? buildViewUrl(item.directUrl) : null;
+    if (!url) {
+      showFeedback(`View for '${item.label}' not set yet. Working in progress`);
+      return;
+    }
+
+    hideFeedback();
+    openUrl(url);
   }
 
   // Le perimetre est obligatoire pour les trois BL regionales, Global inclus.
