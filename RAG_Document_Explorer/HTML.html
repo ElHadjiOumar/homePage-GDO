@@ -1,0 +1,41 @@
+<div id="rag-explorer">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">R</span><div><strong>RAG Explorer</strong><small>Document Quality</small></div></div>
+    <div class="side-label">WORKSPACE</div>
+    <button class="nav-item active" data-view="eligible"><span class="nav-symbol">✓</span> Eligible Files <span id="nav-eligible" class="nav-count">—</span></button>
+    <button class="nav-item" data-view="failing"><span class="nav-symbol">!</span> Failing Files <span id="nav-failing" class="nav-count">—</span></button>
+    <div class="sidebar-bottom"><span class="status-dot"></span> KM4RAG · Dataiku / Collibra</div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div><div class="eyebrow">DATA QUALITY FOR RAG</div><h1 id="page-title">Eligible Files</h1><p id="page-description">Documents that passed the applicable quality checks.</p></div>
+      <button id="refresh-btn" class="button secondary" type="button">↻ Refresh</button>
+    </header>
+
+    <div class="stat-grid">
+      <div class="stat-card"><span class="stat-label">Eligible documents</span><strong id="eligible-count">—</strong><span class="stat-foot">Ready for RAG</span></div>
+      <div class="stat-card"><span class="stat-label">Failing documents</span><strong id="failing-count">—</strong><span class="stat-foot">Require quality review</span></div>
+    </div>
+
+    <section class="documents-panel">
+      <div class="panel-head"><div><h2 id="table-title">Eligible documents</h2><p id="result-label">Loading documents…</p></div><span id="active-tag" class="tag success">Eligible</span></div>
+      <div class="toolbar"><div class="search-wrap"><span>⌕</span><input id="search-input" type="search" placeholder="Search by name, path or issue…" autocomplete="off" aria-label="Search documents"></div><select id="type-filter" aria-label="Filter by document type"><option value="all">All formats</option><option value="pdf">PDF</option><option value="docx">Word</option><option value="pptx">PowerPoint</option><option value="xlsx">Excel</option></select></div>
+      <div id="message" class="message" role="status" hidden></div>
+      <div class="table-scroll"><table><thead><tr><th>File</th><th>SharePoint path</th><th id="third-col">Quality status</th><th></th></tr></thead><tbody id="documents-body"></tbody></table></div>
+      <div id="empty-state" class="empty-state" hidden>No documents found for these filters.</div>
+      <footer class="panel-footer"><span id="pagination-label">—</span><div class="pager"><button id="prev-btn" type="button" aria-label="Previous page">‹</button><span id="page-label">1</span><button id="next-btn" type="button" aria-label="Next page">›</button></div></footer>
+    </section>
+  </main>
+
+  <div id="drawer-overlay" class="drawer-overlay" hidden></div>
+  <aside id="detail-drawer" class="detail-drawer" aria-hidden="true" aria-label="Document details">
+    <div class="drawer-top"><span class="eyebrow">DOCUMENT DETAILS</span><button id="close-drawer" type="button" aria-label="Close details">✕</button></div>
+    <div class="file-icon-large" id="detail-icon">FILE</div><h2 id="detail-name">—</h2><div id="detail-status" class="tag">—</div>
+    <div class="detail-section"><h3>SharePoint location</h3><p id="detail-path" class="breakable">—</p></div>
+    <div class="detail-section" id="issue-section"><h3>Quality issues / taxonomy</h3><div id="detail-issues" class="issue-text">—</div></div>
+    <div class="detail-section"><h3>Document information</h3><dl><dt>Format</dt><dd id="detail-format">—</dd><dt>Source</dt><dd>SharePoint</dd></dl></div>
+    <a id="detail-link" class="button primary" href="#" target="_blank" rel="noopener noreferrer" hidden>Open in Collibra ↗</a>
+    <p id="detail-link-note" class="detail-note">No Collibra link available in this dataset.</p>
+  </aside>
+</div>
